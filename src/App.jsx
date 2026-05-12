@@ -23,6 +23,10 @@ import GrievanceDetail from './screens/GrievanceDetail'
 import BSPList from './screens/BSPList'
 import OfficerLogin from './screens/OfficerLogin'
 import OfficerDashboard from './screens/OfficerDashboard'
+import ProfileSetup from './screens/ProfileSetup'
+import ItineraryBuilder from './screens/ItineraryBuilder'
+import EmergencySOS from './screens/EmergencySOS'
+import VisualAI from './screens/VisualAI'
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useApp()
@@ -39,6 +43,7 @@ export default function App() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<Login />} />
       <Route path="/otp" element={<OTPVerify />} />
+      <Route path="/profile-setup" element={<ProfileSetup />} />
 
       {/* Tourist portal (protected) */}
       <Route path="/home" element={<ProtectedRoute><TouristHome /></ProtectedRoute>} />
@@ -55,6 +60,9 @@ export default function App() {
       <Route path="/grievance/:id" element={<ProtectedRoute><GrievanceDetail /></ProtectedRoute>} />
       <Route path="/bsp" element={<ProtectedRoute><BSPList /></ProtectedRoute>} />
       <Route path="/checkin" element={<ProtectedRoute><TouristHome /></ProtectedRoute>} />
+      <Route path="/itinerary-builder" element={<ProtectedRoute><ItineraryBuilder /></ProtectedRoute>} />
+      <Route path="/sos" element={<ProtectedRoute><EmergencySOS /></ProtectedRoute>} />
+      <Route path="/visual-ai" element={<ProtectedRoute><VisualAI /></ProtectedRoute>} />
 
       {/* Officer portal */}
       <Route path="/officer-login" element={<OfficerLogin />} />

@@ -9,7 +9,7 @@ const QUICK_ACTIONS = [
   { ico: '🍽', label: 'Local Food' },
   { ico: '🗣', label: 'Translate' },
   { ico: '🎤', label: 'Voice Mode' },
-  { ico: '📷', label: 'AR Mode', accent: true },
+  { ico: '🔭', label: 'Visual AI', accent: true, link: '/visual-ai' },
 ]
 
 const RECENT = [
@@ -184,7 +184,7 @@ export default function PadharoAI() {
               {QUICK_ACTIONS.map(a => (
                 <button
                   key={a.label}
-                  onClick={() => { if (a.label === 'AR Mode') return; setView('chat'); setTimeout(() => sendMsg(`${a.ico} ${a.label}`), 300) }}
+                  onClick={() => { if (a.link) { navigate(a.link); return; } setView('chat'); setTimeout(() => sendMsg(`${a.ico} ${a.label}`), 300) }}
                   style={{
                     padding: '10px 6px',
                     background: a.accent ? 'var(--accent-light)' : 'linear-gradient(135deg,var(--primary-ghost),var(--soft))',
@@ -197,7 +197,7 @@ export default function PadharoAI() {
                 >
                   <div style={{ fontSize: 20, marginBottom: 4 }}>{a.ico}</div>
                   {a.label}
-                  {a.accent && <span style={{ background: 'var(--accent)', color: '#3D1F00', fontSize: 8, padding: '1px 4px', borderRadius: 4, marginLeft: 3 }}>NEW</span>}
+                  {a.accent && <div style={{ background: 'var(--accent)', color: '#3D1F00', fontSize: 8, padding: '1px 4px', borderRadius: 4, marginTop: 2 }}>NEW</div>}
                 </button>
               ))}
             </div>

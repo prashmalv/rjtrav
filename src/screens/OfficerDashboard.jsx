@@ -20,6 +20,29 @@ const BSP = [
   { id: 'BSP-2211', name: 'Royal Guide Services', location: 'Udaipur', status: 'pending', score: 78, complaints: 1 },
 ]
 
+const FOOTFALL = [
+  { district: 'Jaipur', visitors: 18420, revenue: 24.2, change: '+12%', color: '#C2185B' },
+  { district: 'Udaipur', visitors: 11300, revenue: 18.7, change: '+8%', color: '#3B82F6' },
+  { district: 'Jodhpur', visitors: 9850, revenue: 14.1, change: '+15%', color: '#8B5CF6' },
+  { district: 'Jaisalmer', visitors: 7620, revenue: 12.4, change: '+22%', color: '#F59E0B' },
+  { district: 'Pushkar', visitors: 6410, revenue: 8.9, change: '+5%', color: '#10B981' },
+  { district: 'Ranthambore', visitors: 4280, revenue: 7.3, change: '+18%', color: '#EF4444' },
+]
+
+const MONTHLY = [
+  { month: 'Aug', val: 38 },
+  { month: 'Sep', val: 52 },
+  { month: 'Oct', val: 71 },
+  { month: 'Nov', val: 94 },
+  { month: 'Dec', val: 100 },
+  { month: 'Jan', val: 88 },
+  { month: 'Feb', val: 76 },
+  { month: 'Mar', val: 65 },
+]
+
+const maxMonthly = Math.max(...MONTHLY.map(m => m.val))
+const maxFootfall = Math.max(...FOOTFALL.map(f => f.visitors))
+
 export default function OfficerDashboard() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -45,7 +68,7 @@ export default function OfficerDashboard() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 0, background: '#1E293B', borderBottom: '1px solid #334155', flexShrink: 0 }}>
-        {[['dashboard', '📊 Dashboard'], ['grievances', '📢 Grievances'], ['bsp', '🏨 BSP']].map(([val, lbl]) => (
+        {[['dashboard', '📊 Dashboard'], ['grievances', '📢 Grievances'], ['bsp', '🏨 BSP'], ['analytics', '📈 Analytics']].map(([val, lbl]) => (
           <button key={val} onClick={() => setActiveTab(val)} style={{ flex: 1, padding: '10px 4px', fontSize: 11, fontWeight: 700, color: activeTab === val ? '#F59E0B' : '#64748B', background: 'none', borderBottom: activeTab === val ? '2px solid #F59E0B' : '2px solid transparent' }}>
             {lbl}
           </button>
@@ -162,15 +185,88 @@ export default function OfficerDashboard() {
             </>
           )}
 
+          {activeTab === 'analytics' && (
+            <>
+              <div style={{ fontSize: 11, color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>Tourist Analytics · May 2026</div>
+
+              {/* KPI row */}
+              <div className="grid-2">
+                {[
+                  { label: 'Total Visitors (MTD)', value: '57,880', delta: '↑ 14% vs Apr', color: '#C2185B' },
+                  { label: 'Revenue (₹ Cr)', value: '₹85.6', delta: '↑ 18% vs Apr', color: '#10B981' },
+                  { label: 'Avg Stay (days)', value: '4.2', delta: '+0.3 vs last month', color: '#F59E0B' },
+                  { label: 'Satisfaction Score', value: '4.6/5', delta: '↑ 0.2 vs Apr', color: '#3B82F6' },
+                ].map(m => (
+                  <div key={m.label} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 12, borderLeft: `3px solid ${m.color}` }}>
+                    <div style={{ fontSize: 9.5, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 700 }}>{m.label}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: m.color, marginTop: 4, lineHeight: 1.1 }}>{m.value}</div>
+                    <div style={{ fontSize: 9.5, color: '#94A3B8', fontWeight: 700, marginTop: 2 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* District-wise footfall heatmap */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ fontSize: 12, fontWeight: 800 }}>District Footfall Heatmap</span>
+                  <span style={{ fontSize: 10, color: '#64748B' }}>This Month</span>
+                </div>
+                {FOOTFALL.map(f => (
+                  <div key={f.district} style={{ marginBottom: 9 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 3 }}>
+                      <span style={{ fontWeight: 700, color: '#E2E8F0' }}>{f.district}</span>
+                      <span style={{ color: f.color, fontWeight: 700 }}>{f.visitors.toLocaleString()} · {f.change}</span>
+                    </div>
+                    <div style={{ height: 8, background: '#0F172A', borderRadius: 4, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', background: `linear-gradient(90deg,${f.color},${f.color}88)`, width: `${(f.visitors / maxFootfall) * 100}%`, borderRadius: 4, transition: 'width 0.8s ease' }} />
+                    </div>
+                    <div style={{ fontSize: 9.5, color: '#64748B', marginTop: 1 }}>Revenue: ₹{f.revenue} Cr</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Monthly trend chart */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ fontSize: 12, fontWeight: 800 }}>Monthly Tourist Trend</span>
+                  <span style={{ fontSize: 10, color: '#64748B' }}>Season 2025–26</span>
+                </div>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 80 }}>
+                  {MONTHLY.map(m => (
+                    <div key={m.month} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                      <div style={{ width: '100%', background: m.month === 'Dec' ? '#C2185B' : '#334155', borderRadius: '3px 3px 0 0', height: `${(m.val / maxMonthly) * 70}px`, minHeight: 4, transition: 'height 0.5s ease', position: 'relative' }}>
+                        {m.month === 'Dec' && <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', fontSize: 8, color: '#C2185B', fontWeight: 800, whiteSpace: 'nowrap' }}>PEAK</div>}
+                      </div>
+                      <div style={{ fontSize: 8.5, color: '#64748B', fontWeight: 600 }}>{m.month}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* AI insights for analytics */}
+              <div style={{ background: 'linear-gradient(135deg,#1E2D1A,#1A2A14)', border: '1px solid #2D4A20', borderRadius: 12, padding: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <span style={{ fontSize: 16 }}>🤖</span>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: '#86EFAC' }}>AI Analytics Insights</span>
+                </div>
+                <div style={{ fontSize: 11, color: '#86EFAC', lineHeight: 1.7 }}>
+                  📈 <strong>Jaisalmer</strong> shows +22% growth — highest in the state. Expand infrastructure before next season.<br />
+                  🎪 <strong>Pushkar Camel Fair</strong> (Nov) generated ₹18.2 Cr in 10 days — consider dedicated pre-booking portal.<br />
+                  🌍 <strong>Foreign tourist share</strong> at 34% (+6% YoY) — strengthen multilingual BSP certification.
+                </div>
+              </div>
+            </>
+          )}
+
           <div style={{ height: 8 }} />
         </div>
       </div>
 
       {/* Dark bottom nav */}
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', background: '#1E293B', borderTop: '1px solid #334155', padding: '8px 4px 12px', flexShrink: 0 }}>
-        {[['📊', 'Dashboard'], ['📢', 'Grievances'], ['🏨', 'BSP'], ['👤', 'Profile']].map(([ico, lbl]) => (
-          <button key={lbl} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 10, color: lbl === 'Dashboard' ? '#F59E0B' : '#64748B', fontWeight: 600, flex: 1, background: 'none' }}
-            onClick={() => setActiveTab(lbl.toLowerCase())}>
+        {[['📊', 'Dashboard', 'dashboard'], ['📢', 'Grievances', 'grievances'], ['🏨', 'BSP', 'bsp'], ['📈', 'Analytics', 'analytics']].map(([ico, lbl, val]) => (
+          <button key={val} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 10, color: activeTab === val ? '#F59E0B' : '#64748B', fontWeight: 600, flex: 1, background: 'none', border: 'none', cursor: 'pointer' }}
+            onClick={() => setActiveTab(val)}>
             <span style={{ fontSize: 20 }}>{ico}</span>
             {lbl}
           </button>

@@ -20,8 +20,11 @@ export default function TouristHome() {
               <div style={{ fontSize: 18, fontWeight: 800 }}>{user?.name || 'Vikram Singh'}</div>
               <div style={{ fontSize: 10.5, opacity: 0.85, marginTop: 2 }}>📍 Jaipur · Heritage Explorer</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <button style={{ position: 'relative', background: 'rgba(255,255,255,0.2)', border: 'none', width: 36, height: 36, borderRadius: '50%', color: '#fff', fontSize: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={() => navigate('/sos')} style={{ background: '#EF4444', border: 'none', width: 36, height: 36, borderRadius: '50%', color: '#fff', fontSize: 13, fontWeight: 900, cursor: 'pointer', boxShadow: '0 2px 8px rgba(239,68,68,0.5)', animation: 'fabPulse 3s ease-in-out infinite' }}>
+                SOS
+              </button>
+              <button style={{ position: 'relative', background: 'rgba(255,255,255,0.2)', border: 'none', width: 36, height: 36, borderRadius: '50%', color: '#fff', fontSize: 16, cursor: 'pointer' }}>
                 🔔
                 <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, background: '#10B981', borderRadius: '50%', border: '1.5px solid var(--primary)' }} />
               </button>
@@ -63,10 +66,10 @@ export default function TouristHome() {
               ['🗺', 'Explore', '/explore'],
               ['🎫', 'My Trips', '/my-trips'],
               ['🤖', 'AI Chat', '/ai-chat'],
+              ['🗓', 'Itinerary', '/itinerary-builder'],
               ['📢', 'Grievance', '/grievances'],
               ['🏨', 'BSP List', '/bsp'],
-              ['📋', 'Check-in', '/checkin'],
-              ['💳', 'Rewards', null],
+              ['🆘', 'SOS', '/sos'],
               ['👤', 'Profile', '/profile'],
             ].map(([ico, nm, path]) => (
               <div key={nm} className="cat-tile" onClick={() => path ? navigate(path) : showToast('Coming soon')}>

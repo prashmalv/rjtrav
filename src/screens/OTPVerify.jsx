@@ -29,8 +29,7 @@ export default function OTPVerify() {
   const handleVerify = () => {
     setVerified(true)
     setTimeout(() => {
-      login()
-      navigate('/home')
+      navigate('/profile-setup')
     }, 1200)
   }
 
@@ -50,7 +49,7 @@ export default function OTPVerify() {
             {verified ? (
               <>
                 <div style={{ fontSize: 16, fontWeight: 800, color: '#10B981' }}>✓ Verified!</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 4 }}>Redirecting to your dashboard...</div>
+                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 4 }}>Setting up your profile...</div>
               </>
             ) : (
               <>
