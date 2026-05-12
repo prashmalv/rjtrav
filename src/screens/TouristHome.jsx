@@ -1,0 +1,152 @@
+import { useNavigate } from 'react-router-dom'
+import { useApp, destinations, packages } from '../context/AppContext'
+import StatusBar from '../components/StatusBar'
+import BottomNav from '../components/BottomNav'
+
+export default function TouristHome() {
+  const navigate = useNavigate()
+  const { user, showToast } = useApp()
+
+  return (
+    <div className="app-shell">
+      {/* Gradient header */}
+      <div style={{ background: 'var(--grad-hero)', padding: '12px 16px 16px', color: '#fff', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+        <div className="pattern-bg" style={{ opacity: 0.3 }} />
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <StatusBar light />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+            <div>
+              <div style={{ fontSize: 11, opacity: 0.9 }}>Namaste 🙏</div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>{user?.name || 'Vikram Singh'}</div>
+              <div style={{ fontSize: 10.5, opacity: 0.85, marginTop: 2 }}>📍 Jaipur · Heritage Explorer</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button style={{ position: 'relative', background: 'rgba(255,255,255,0.2)', border: 'none', width: 36, height: 36, borderRadius: '50%', color: '#fff', fontSize: 16 }}>
+                🔔
+                <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, background: '#10B981', borderRadius: '50%', border: '1.5px solid var(--primary)' }} />
+              </button>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg,var(--accent),#fff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: 'var(--primary-darker)', cursor: 'pointer' }} onClick={() => navigate('/profile')}>
+                {user?.initials || 'VS'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="screen-scroll">
+        <div className="content" style={{ paddingTop: 14 }}>
+          {/* Search */}
+          <div className="search-bar">
+            <span>🔍</span>
+            <input placeholder="Search destinations, packages..." readOnly onClick={() => navigate('/explore')} />
+            <span>🎤</span>
+          </div>
+
+          {/* KPI Row */}
+          <div className="kpi-row">
+            <div className="kpi">
+              <div className="kl">Upcoming Trip</div>
+              <div className="kv" style={{ fontSize: 14, color: 'var(--primary-dark)' }}>Royal Trail</div>
+              <div className="kd">⏱ in 12 days</div>
+            </div>
+            <div className="kpi">
+              <div className="kl">Reward Points</div>
+              <div className="kv">2,840</div>
+              <div className="kd">+340 this month</div>
+            </div>
+          </div>
+
+          {/* Quick actions */}
+          <div className="sec-head"><h3>Quick Actions</h3></div>
+          <div className="cat-grid">
+            {[
+              ['🗺', 'Explore', '/explore'],
+              ['🎫', 'My Trips', '/my-trips'],
+              ['🤖', 'AI Chat', '/ai-chat'],
+              ['📢', 'Grievance', '/grievances'],
+              ['🏨', 'BSP List', '/bsp'],
+              ['📋', 'Check-in', '/checkin'],
+              ['💳', 'Rewards', null],
+              ['👤', 'Profile', '/profile'],
+            ].map(([ico, nm, path]) => (
+              <div key={nm} className="cat-tile" onClick={() => path ? navigate(path) : showToast('Coming soon')}>
+                <div className="cat-ico">{ico}</div>
+                <div className="cat-nm">{nm}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Upcoming trip */}
+          <div className="sec-head"><h3>Upcoming Trip</h3><span className="more" onClick={() => navigate('/my-trips')}>View all →</span></div>
+          <div className="booking-card" onClick={() => navigate('/my-trips')}>
+            <div className="booking-card-img" style={{ background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 60 }}>
+              🏯
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(0,0,0,0.1),rgba(0,0,0,0.6))', zIndex: 1 }} />
+              <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 2 }}>
+                <span className="chip chip-accent">⏱ in 12 days</span>
+              </div>
+              <div style={{ position: 'absolute', bottom: 10, left: 10, color: '#fff', zIndex: 2 }}>
+                <div style={{ fontSize: 15, fontWeight: 800, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Royal Rajasthan Trail</div>
+                <div style={{ fontSize: 10.5, opacity: 0.95 }}>Jaipur · Udaipur · Jaisalmer · 7N</div>
+              </div>
+            </div>
+            <div className="booking-card-body">
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 10 }}>
+                <span style={{ color: 'var(--ink-mute)' }}>Booking ID</span>
+                <span style={{ fontWeight: 700, fontFamily: 'monospace' }}>RAJ-26-04812</span>
+              </div>
+              <div className="timeline" style={{ paddingLeft: 4 }}>
+                {[
+                  { status: 'done', title: 'Booking Confirmed', time: 'Apr 18 · ✓ Paid ₹1.27L' },
+                  { status: 'active', title: 'Pre-trip prep', time: 'Vouchers ready · AI guide unlocked' },
+                  { status: '', title: 'Check-in · Heritage Haveli', time: 'Nov 15 · 2 PM' },
+                ].map((item, i) => (
+                  <div key={i} className={`tl-item ${item.status}`}>
+                    <div className="tl-dot" />
+                    <div className="tl-title">{item.title}</div>
+                    <div className="tl-time">{item.time}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="grid-2" style={{ marginTop: 10 }}>
+                <button className="btn-flat" style={{ textAlign: 'center', fontSize: 11 }}>📄 Voucher</button>
+                <button className="btn-pri btn-sm" style={{ display: 'block', textAlign: 'center' }} onClick={() => navigate('/my-trips')}>View Details</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Recommended */}
+          <div className="sec-head"><h3>Recommended for You</h3><span className="more" onClick={() => navigate('/explore')}>More →</span></div>
+          {destinations.slice(0, 3).map(d => (
+            <div key={d.id} className="list-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/destination/${d.id}`)}>
+              <div className="lc-thumb" style={{ background: 'var(--grad-hero)', fontSize: 26 }}>{d.img}</div>
+              <div className="lc-info">
+                <div className="lc-title">{d.name}</div>
+                <div className="lc-sub"><span>📍 {d.city}</span><span>⭐ {d.rating}</span></div>
+              </div>
+              <div className="lc-arrow">›</div>
+            </div>
+          ))}
+
+          {/* AI tip */}
+          <div className="ai-box">
+            <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>💡 Padharo AI tip for you</div>
+            <div className="text-xs" style={{ color: 'var(--ink-soft)', lineHeight: 1.55, marginTop: 4 }}>
+              Pre-book Jaisalmer camel safari now — 11 Nov is the Pushkar Camel Fair, prices spike 40%. <span style={{ color: 'var(--primary)', fontWeight: 700, cursor: 'pointer' }} onClick={() => navigate('/packages')}>Tap to book.</span>
+            </div>
+          </div>
+
+          <div style={{ height: 8 }} />
+        </div>
+      </div>
+
+      {/* AI FAB */}
+      <div className="chat-fab" onClick={() => navigate('/ai-chat')} title="Chat with Padharo AI">
+        💬
+        <span className="fab-badge" />
+      </div>
+
+      <BottomNav />
+    </div>
+  )
+}
