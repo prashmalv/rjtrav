@@ -169,13 +169,22 @@ export default function VisitorHome() {
           </div>
 
           {/* ── STATS BAR ── */}
-          <div style={{ display: 'flex', gap: 0, background: 'linear-gradient(135deg, var(--primary-darker), #7C3AED)', borderRadius: 14, overflow: 'hidden' }}>
-            {[['7', 'UNESCO Sites'], ['200+', 'Forts & Palaces'], ['50M+', 'Yearly Visitors'], ['33', 'Districts']].map(([val, label], i, arr) => (
-              <div key={label} style={{ flex: 1, textAlign: 'center', padding: '10px 4px', borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.15)' : 'none' }}>
-                <div style={{ fontSize: 15, fontWeight: 900, color: '#fff', letterSpacing: -0.3 }}>{val}</div>
-                <div style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.8)', fontWeight: 600, marginTop: 1 }}>{label}</div>
-              </div>
-            ))}
+          <div style={{ background: 'linear-gradient(135deg, var(--primary-darker), #7C3AED)', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', gap: 0 }}>
+              {[['7', 'UNESCO Sites'], ['200+', 'Forts & Palaces'], ['50M+', 'Yearly Visitors'], ['33', 'Districts']].map(([val, label], i, arr) => (
+                <div key={label} style={{ flex: 1, textAlign: 'center', padding: '10px 4px', borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.15)' : 'none' }}>
+                  <div style={{ fontSize: 15, fontWeight: 900, color: '#fff', letterSpacing: -0.3 }}>{val}</div>
+                  <div style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.8)', fontWeight: 600, marginTop: 1 }}>{label}</div>
+                </div>
+              ))}
+            </div>
+            <div
+              style={{ borderTop: '1px solid rgba(255,255,255,0.15)', padding: '6px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer' }}
+              onClick={() => window.open('https://www.tourism.rajasthan.gov.in', '_blank')}
+            >
+              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.75)', fontWeight: 600 }}>🏛 Data source: Official Rajasthan Tourism Portal · tourism.rajasthan.gov.in</span>
+              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)' }}>↗</span>
+            </div>
           </div>
 
           {/* ── CITY GRID WITH TAGLINES ── */}

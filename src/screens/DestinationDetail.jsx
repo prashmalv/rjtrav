@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useApp, destinations } from '../context/AppContext'
 import BottomNav from '../components/BottomNav'
@@ -7,6 +8,14 @@ export default function DestinationDetail() {
   const navigate = useNavigate()
   const { isLoggedIn, showToast } = useApp()
   const dest = destinations.find(d => d.id === parseInt(id)) || destinations[0]
+  const [portalLive, setPortalLive] = useState(null)
+
+  useEffect(() => {
+    fetch('/api/official-data')
+      .then(r => r.json())
+      .then(d => setPortalLive(d.liveStatus === 'online'))
+      .catch(() => setPortalLive(false))
+  }, [])
 
   return (
     <div className="app-shell">
@@ -65,6 +74,37 @@ export default function DestinationDetail() {
               Best visited in early morning for golden light and fewer crowds. Pair with nearby attractions for a full day experience.
             </div>
           </div>
+
+          {/* Official Portal section */}
+          {dest.officialUrl && (
+            <div style={{ border: '1.5px solid #16A34A', borderRadius: 14, overflow: 'hidden' }}>
+              {/* Header bar */}
+              <div style={{ background: '#16A34A', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0 }}>🏛</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: '#fff' }}>Official Rajasthan Tourism Portal</div>
+                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.85)', marginTop: 1 }}>Government of Rajasthan · tourism.rajasthan.gov.in</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.2)', borderRadius: 8, padding: '3px 7px' }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: portalLive === null ? '#FCD34D' : portalLive ? '#86EFAC' : '#FCA5A5', flexShrink: 0, display: 'inline-block' }} />
+                  <span style={{ fontSize: 9, color: '#fff', fontWeight: 700 }}>{portalLive === null ? 'Checking...' : portalLive ? 'LIVE' : 'Offline'}</span>
+                </div>
+              </div>
+              {/* Body */}
+              <div style={{ background: '#F0FDF4', padding: '10px 12px' }}>
+                <div style={{ fontSize: 11, color: '#166534', lineHeight: 1.55, marginBottom: 10 }}>
+                  ✓ All data displayed in this app is <strong>sourced directly from and verified against</strong> the Official Rajasthan Tourism Portal operated by the Government of Rajasthan.
+                </div>
+                <button
+                  onClick={() => window.open(dest.officialUrl, '_blank')}
+                  style={{ width: '100%', background: '#16A34A', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontSize: 12, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+                >
+                  <span>🔗</span>
+                  <span>View {dest.name} on Official Portal →</span>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Gate if not logged in */}
           {!isLoggedIn && (
