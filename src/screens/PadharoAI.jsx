@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
@@ -29,6 +29,14 @@ async function callAI(messages, userProfile, language) {
   const data = await res.json()
   if (!res.ok || data.error) throw new Error(data.error || 'AI error')
   return data.reply
+}
+
+function isGrievanceIntent(msg) {
+  const m = msg.toLowerCase()
+  return m.includes('complaint') || m.includes('grievance') || m.includes('overcharg') ||
+    m.includes('problem with') || m.includes('cheat') || m.includes('fraud') ||
+    m.includes('scam') || m.includes('bad service') || m.includes('rude') ||
+    m.includes('file a complaint') || m.includes('report')
 }
 
 function localFallback(msg, profile) {
@@ -63,6 +71,9 @@ function localFallback(msg, profile) {
   if (m.includes('pushkar')) {
     return `🌸 **Pushkar**\n\n📍 250 km from Jaipur · World's only Brahma Temple\n🐪 **Camel Fair:** November (check official calendar for exact dates)\n\n**Must-do:**\n• Holy dip at Pushkar Lake (one of 5 sacred lakes in India)\n• Brahma Temple darshan (5AM–1:30PM, 3–9PM)\n• Sunset from Savitri Temple hilltop (rope-way available)\n• Bazaar shopping — silver jewellery, leather goods\n\n💡 Pushkar is vegetarian & alcohol-free city — respect local customs.`
   }
+  if (isGrievanceIntent(m)) {
+    return `I'm sorry to hear you had an issue! 😟 I'll help you file an official grievance with Rajasthan Tourism Authority.\n\nPlease share:\n• **What happened?** (brief description)\n• **Location** (which city/attraction)\n• **Date** of the incident\n• **Operator/person involved** (if known)\n\nOnce you provide these details, I'll guide you to file it officially. All grievances get a **24-hour response guarantee** and a tracking ID.\n\nOr you can go directly to the Grievance section: tap the [📢 Grievance] button in the app.`
+  }
   if (interests.includes('Photography') && (m.includes('photo') || m.includes('shot') || m.includes('instagram'))) {
     return `📸 **Top Photography Spots in Rajasthan**\n\n🌅 **Golden Hour shots:**\n• Hawa Mahal facade — MI Road, Jaipur (sunrise)\n• Mehrangarh Fort overview of blue city (sunset)\n• Sam Sand Dunes silhouettes (sunset)\n• Lake Pichola with City Palace reflection (dusk)\n\n🏯 **Architecture:**\n• Amber Fort mirror corridors (avoid 11AM–3PM harsh light)\n• Jaisalmer Fort from Vyas Chhatri at magic hour\n\n💡 Blue Hour in Jodhpur is extraordinary — climb Mehrangarh at 6PM.`
   }
@@ -90,12 +101,14 @@ function RenderText({ text }) {
 
 export default function PadharoAI() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, appLanguage } = useApp()
   const [view, setView] = useState('home')
   const [msgs, setMsgs] = useState([])
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
   const appLanguageRef = useRef(appLanguage)
+  const initialMsgFired = useRef(false)
   useEffect(() => { appLanguageRef.current = appLanguage }, [appLanguage])
 
   const bottomRef = useRef(null)
@@ -109,6 +122,18 @@ export default function PadharoAI() {
       setMsgs([{ from: 'bot', text: greeting }])
     }
   }, [view])
+
+  // Handle initial message passed from home page AI bar
+  useEffect(() => {
+    const initialMsg = location.state?.initialMsg
+    if (initialMsg && !initialMsgFired.current) {
+      initialMsgFired.current = true
+      const history = [{ from: 'bot', text: greeting }]
+      setMsgs(history)
+      setView('chat')
+      setTimeout(() => doSendMsg(initialMsg, history), 120)
+    }
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

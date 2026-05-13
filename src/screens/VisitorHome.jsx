@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
@@ -5,111 +6,222 @@ import LanguageSelector from '../components/LanguageSelector'
 import { destinations, useApp } from '../context/AppContext'
 import { useT } from '../i18n'
 
-const AMBER_FORT = 'https://media-cdn.tripadvisor.com/media/photo-s/17/d3/a8/57/images-30-largejpg.jpg'
+const HERO_CITIES = [
+  { name: 'Jaipur', tagline: 'The Pink City', emoji: '🌸', visitors: '8,247', color: '#BE185D', img: 'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg' },
+  { name: 'Udaipur', tagline: 'City of Lakes', emoji: '⛵', visitors: '6,831', color: '#1D4ED8', img: 'https://plus.unsplash.com/premium_photo-1697729789803-48b0c82365ff?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2l0eSUyMHBhbGFjZSUyMHVkYWlwdXIlMjBpbmRpYXxlbnwwfHwwfHx8MA%3D%3D' },
+  { name: 'Jodhpur', tagline: 'The Blue City', emoji: '💙', visitors: '4,156', color: '#4338CA', img: 'https://s7ap1.scene7.com/is/image/incredibleindia/mehrangarh-fort-jodhpur-rajasthan-hero?qlt=82&ts=1726660826646' },
+  { name: 'Jaisalmer', tagline: 'The Golden City', emoji: '🌟', visitors: '3,240', color: '#B45309', img: 'https://t3.ftcdn.net/jpg/18/64/90/28/360_F_1864902844_6YAGMiY2NH5DrVTtDMk2BnMUL6CyOJoW.jpg' },
+  { name: 'Pushkar', tagline: 'Sacred Land of Brahma', emoji: '🕍', visitors: '2,890', color: '#7C3AED', img: 'https://images.unsplash.com/photo-1519922639192-e73293ca430e?auto=format&fit=crop&w=600&q=82' },
+]
+
+const CITY_GRID = [
+  { name: 'Jaipur', tagline: 'The Pink City', emoji: '🌸', bg: '#FDF2F8', color: '#BE185D', img: 'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg', dest: 1 },
+  { name: 'Udaipur', tagline: 'City of Lakes', emoji: '⛵', bg: '#EFF6FF', color: '#1D4ED8', img: 'https://plus.unsplash.com/premium_photo-1697729789803-48b0c82365ff?fm=jpg&q=60&w=800', dest: 4 },
+  { name: 'Jodhpur', tagline: 'The Blue City', emoji: '💙', bg: '#EEF2FF', color: '#4338CA', img: 'https://s7ap1.scene7.com/is/image/incredibleindia/mehrangarh-fort-jodhpur-rajasthan-hero?qlt=82&ts=1726660826646', dest: 3 },
+  { name: 'Jaisalmer', tagline: 'The Golden City', emoji: '🌟', bg: '#FFFBEB', color: '#B45309', img: 'https://t3.ftcdn.net/jpg/18/64/90/28/360_F_1864902844_6YAGMiY2NH5DrVTtDMk2BnMUL6CyOJoW.jpg', dest: 5 },
+  { name: 'Ranthambore', tagline: 'Land of Royal Tigers', emoji: '🐅', bg: '#ECFDF5', color: '#059669', img: 'https://thumbs.dreamstime.com/b/ranthambore-national-park-rajasthan-india-august-wild-royal-bengal-tiger-open-monsoon-season-wildlife-lovers-229783456.jpg', dest: 6 },
+  { name: 'Pushkar', tagline: 'Sacred Land of Brahma', emoji: '🕍', bg: '#F5F3FF', color: '#7C3AED', img: 'https://images.unsplash.com/photo-1519922639192-e73293ca430e?auto=format&fit=crop&w=600&q=82', dest: null },
+]
+
+const QUICK_CHIPS = [
+  { label: '🗺 Plan My Trip', query: 'Help me plan a trip to Rajasthan based on my interests' },
+  { label: '🏰 Top Forts', query: 'What are the top heritage forts to visit in Rajasthan?' },
+  { label: '📢 File Complaint', query: 'I want to file a grievance or complaint about a tourism issue' },
+  { label: '📦 Book Package', query: 'Show me tour packages available for Rajasthan' },
+  { label: '🤝 Local Guide', query: 'How do I find a certified local guide in Rajasthan?' },
+]
 
 export default function VisitorHome() {
   const navigate = useNavigate()
   const { appLanguage } = useApp()
   const t = useT(appLanguage)
+  const [heroIdx, setHeroIdx] = useState(0)
+  const [aiInput, setAiInput] = useState('')
+  const [transitioning, setTransitioning] = useState(false)
+  const inputRef = useRef(null)
 
-  const cats = [
-    ['🏰', t.forts, '/explore?cat=Heritage'],
-    ['🐅', t.wildlife, '/explore?cat=Wildlife'],
-    ['🐪', t.desert, '/explore?cat=Desert'],
-    ['⛵', t.lakes, '/explore?cat=Lakes'],
-    ['🕌', t.temples, '/explore'],
-    ['🛍', t.shopping, '/explore'],
-    ['🍽', t.food, '/explore'],
-    ['📦', t.packages, '/packages'],
-  ]
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTransitioning(true)
+      setTimeout(() => {
+        setHeroIdx(i => (i + 1) % HERO_CITIES.length)
+        setTransitioning(false)
+      }, 300)
+    }, 3800)
+    return () => clearInterval(timer)
+  }, [])
+
+  const city = HERO_CITIES[heroIdx]
+
+  const handleAsk = (q) => {
+    const query = (q || aiInput).trim()
+    if (!query) { inputRef.current?.focus(); return }
+    navigate('/ai-chat', { state: { initialMsg: query } })
+  }
 
   return (
     <div className="app-shell" style={{ background: 'var(--bg)' }}>
-      <StatusBar />
+      <StatusBar light />
 
-      {/* Visitor Hero */}
-      <div className="visitor-hero">
+      {/* ── HERO CAROUSEL ── */}
+      <div style={{ height: 260, position: 'relative', flexShrink: 0, overflow: 'hidden' }}>
+        {/* Background image */}
         <img
-          src="/banner1.jpeg"
-          alt="Rajasthan"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', zIndex: 1 }}
+          key={city.name}
+          src={city.img}
+          alt={city.name}
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'center',
+            opacity: transitioning ? 0 : 1,
+            transition: 'opacity 0.35s ease',
+          }}
+          onError={e => { e.target.style.display = 'none' }}
         />
-        <div className="visitor-hero-content">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'auto' }}>
-            <div style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(10px)', padding: '6px 10px', borderRadius: 14, display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: '#fff' }}>
-              🏰 RJ Tourism
-            </div>
+        {/* Dark gradient for readability */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.72) 100%)' }} />
+
+        {/* Top bar */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 3 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)', padding: '6px 10px', borderRadius: 14 }}>
+            <span style={{ fontSize: 14 }}>🏰</span>
+            <span style={{ fontSize: 11, fontWeight: 800, color: '#fff', letterSpacing: 0.3 }}>RAJASTHAN TOURISM</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <LanguageSelector light />
           </div>
-          <span style={{ background: 'rgba(245,158,11,0.95)', color: '#3D1F00', fontSize: 9.5, fontWeight: 800, letterSpacing: 0.5, padding: '3px 8px', borderRadius: 8, alignSelf: 'flex-start', marginBottom: 6 }}>⭐ #1 HERITAGE STATE</span>
-          <h2 style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.05, textShadow: '0 2px 6px rgba(0,0,0,0.6)', marginBottom: 4 }}>Discover the Land of Maharajas</h2>
-          <div style={{ fontSize: 11, opacity: 0.95, fontWeight: 600 }}>पधारो म्हारे देश · Browse without signing in</div>
+        </div>
+
+        {/* City info */}
+        <div style={{
+          position: 'absolute', bottom: 16, left: 16, right: 16, zIndex: 3,
+          opacity: transitioning ? 0 : 1, transition: 'opacity 0.3s ease',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <span style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', color: '#fff', fontSize: 9.5, fontWeight: 800, padding: '3px 8px', borderRadius: 8, letterSpacing: 0.5 }}>
+              👥 {city.visitors} visiting today
+            </span>
+            <span style={{ background: city.color, color: '#fff', fontSize: 9.5, fontWeight: 800, padding: '3px 8px', borderRadius: 8, letterSpacing: 0.3 }}>
+              LIVE
+            </span>
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.1 }}>
+            {city.emoji} {city.name}
+          </div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.92)', fontWeight: 600, marginTop: 2, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
+            {city.tagline}
+          </div>
+        </div>
+
+        {/* Dot indicators */}
+        <div style={{ position: 'absolute', bottom: 10, right: 16, display: 'flex', gap: 5, zIndex: 4 }}>
+          {HERO_CITIES.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setHeroIdx(i)}
+              style={{ width: i === heroIdx ? 16 : 6, height: 6, borderRadius: 3, background: i === heroIdx ? '#fff' : 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'all 0.3s' }}
+            />
+          ))}
         </div>
       </div>
 
+      {/* ── MAIN CONTENT ── */}
       <div className="screen-scroll">
-        <div className="content">
+        <div className="content" style={{ paddingTop: 12 }}>
 
-          {/* Search */}
-          <div className="search-bar">
-            <span>🔍</span>
-            <input placeholder="Search Hawa Mahal, packages, experiences..." readOnly onClick={() => navigate('/explore')} />
-            <span>🎤</span>
-          </div>
-
-          {/* Guest Banner */}
-          <div onClick={() => navigate('/signup')} style={{ background: 'linear-gradient(135deg,#10B981,#059669)', borderRadius: 12, padding: '11px 14px', color: '#fff', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-            <div style={{ fontSize: 22 }}>👋</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 12, fontWeight: 800 }}>{t.visitingAsGuest}</div>
-              <div style={{ fontSize: 10, opacity: 0.9 }}>{t.signUpSubtext}</div>
+          {/* ── AI CHAT BAR ── */}
+          <div style={{ background: 'linear-gradient(135deg, #7C3AED08, #BE185D08)', border: '1.5px solid var(--primary)', borderRadius: 16, padding: '12px 14px', boxShadow: '0 4px 20px rgba(124,58,237,0.1)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, position: 'relative' }}>
+                🤖
+                <span style={{ position: 'absolute', bottom: 0, right: 0, width: 10, height: 10, background: '#10B981', border: '2px solid #fff', borderRadius: '50%' }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--primary-dark)' }}>Padharo AI · Your Rajasthan Guide</div>
+                <div style={{ fontSize: 10, color: 'var(--ink-mute)' }}>Plan trips · Get info · File complaints · Book packages</div>
+              </div>
             </div>
-            <span style={{ fontSize: 16 }}>›</span>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <input
+                ref={inputRef}
+                value={aiInput}
+                onChange={e => setAiInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleAsk()}
+                placeholder="Ask anything — itinerary, forts, food, complaint..."
+                style={{ flex: 1, border: '1px solid var(--border)', borderRadius: 10, padding: '9px 12px', fontSize: 12.5, color: 'var(--ink)', background: '#fff', outline: 'none', fontWeight: 500 }}
+              />
+              <button
+                onClick={() => handleAsk()}
+                style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--grad-hero)', border: 'none', color: '#fff', fontSize: 16, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }}
+              >→</button>
+            </div>
+            <div style={{ display: 'flex', gap: 6, marginTop: 9, flexWrap: 'wrap' }}>
+              {QUICK_CHIPS.map(c => (
+                <button
+                  key={c.label}
+                  onClick={() => handleAsk(c.query)}
+                  style={{ background: 'var(--soft)', border: '1px solid var(--border)', borderRadius: 20, padding: '5px 10px', fontSize: 10.5, fontWeight: 700, color: 'var(--ink-soft)', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Categories */}
-          <div className="sec-head">
-            <h3>{t.exploreByCategory}</h3>
-            <span className="more" onClick={() => navigate('/explore')}>{t.viewAll}</span>
-          </div>
-          <div className="cat-grid">
-            {cats.map(([ico, nm, path]) => (
-              <div key={nm} className="cat-tile" onClick={() => navigate(path)}>
-                <div className="cat-ico">{ico}</div>
-                <div className="cat-nm">{nm}</div>
+          {/* ── STATS BAR ── */}
+          <div style={{ display: 'flex', gap: 0, background: 'linear-gradient(135deg, var(--primary-darker), #7C3AED)', borderRadius: 14, overflow: 'hidden' }}>
+            {[['7', 'UNESCO Sites'], ['200+', 'Forts & Palaces'], ['50M+', 'Yearly Visitors'], ['33', 'Districts']].map(([val, label], i, arr) => (
+              <div key={label} style={{ flex: 1, textAlign: 'center', padding: '10px 4px', borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.15)' : 'none' }}>
+                <div style={{ fontSize: 15, fontWeight: 900, color: '#fff', letterSpacing: -0.3 }}>{val}</div>
+                <div style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.8)', fontWeight: 600, marginTop: 1 }}>{label}</div>
               </div>
             ))}
           </div>
 
-          {/* Featured destination */}
-          <div className="hero-card tall" style={{ cursor: 'pointer' }} onClick={() => navigate('/destination/2')}>
-            <img className="hero-img" src={AMBER_FORT} alt="Amber Fort" />
-            <div className="hero-overlay" />
-            <span className="hero-pill">⭐ UNESCO</span>
-            <div className="hero-name">Amber Fort & Palace</div>
-            <div className="hero-sub"><span>📍 Jaipur</span><span>👥 8K visiting today</span></div>
+          {/* ── CITY GRID WITH TAGLINES ── */}
+          <div>
+            <div className="sec-head" style={{ marginBottom: 10 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 800 }}>Explore Royal Cities</h3>
+              <span className="more" onClick={() => navigate('/explore')}>{t.viewAll}</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              {CITY_GRID.map(c => (
+                <div
+                  key={c.name}
+                  onClick={() => c.dest ? navigate(`/destination/${c.dest}`) : navigate('/explore')}
+                  style={{ borderRadius: 14, overflow: 'hidden', cursor: 'pointer', position: 'relative', height: 120, background: c.bg, border: `1.5px solid ${c.color}22`, boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}
+                >
+                  <img src={c.img} alt={c.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.75) 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: 8, left: 10, right: 10, zIndex: 2 }}>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>{c.emoji} {c.name}</div>
+                    <div style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.9)', marginTop: 1 }}>{c.tagline}</div>
+                  </div>
+                  <div style={{ position: 'absolute', top: 8, right: 8, background: c.color, borderRadius: 6, padding: '2px 6px', fontSize: 8, fontWeight: 800, color: '#fff', zIndex: 2 }}>
+                    EXPLORE
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Destination list */}
-          {destinations.slice(0, 4).map(d => (
-            <div key={d.id} className="list-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/destination/${d.id}`)}>
-              <div className="lc-thumb" style={{ overflow: 'hidden', padding: 0, flexShrink: 0 }}>
-                <img src={d.imgUrl} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { e.target.style.cssText = 'display:flex;align-items:center;justify-content:center;font-size:26px' }} />
+          {/* ── GUEST CTA ── */}
+          <div style={{ background: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', border: '1.5px solid #86EFAC', borderRadius: 14, padding: '14px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ fontSize: 30 }}>🔓</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: '#14532D', marginBottom: 2 }}>{t.signInUnlock}</div>
+                <div style={{ fontSize: 10.5, color: '#166534', lineHeight: 1.4 }}>Book tickets · Save trips · AI guide · File grievances</div>
               </div>
-              <div className="lc-info">
-                <div className="lc-title">{d.name}</div>
-                <div className="lc-sub"><span>📍 {d.city}</span><span>⭐ {d.rating}</span></div>
-              </div>
-              <div className="lc-price">{d.price}</div>
             </div>
-          ))}
-
-          {/* Sign-up CTA */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '16px', textAlign: 'center' }}>
-            <div style={{ fontSize: 28, marginBottom: 8 }}>🔓</div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', marginBottom: 4 }}>{t.signInUnlock}</div>
-            <div style={{ fontSize: 11.5, color: 'var(--ink-mute)', marginBottom: 12, lineHeight: 1.5 }}>{t.signInSubtext}</div>
-            <button className="btn-pri btn-sm" onClick={() => navigate('/signup')} style={{ width: '100%', display: 'block' }}>{t.signInBtn}</button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+              <button className="btn-sec" style={{ fontSize: 11.5, padding: '8px 0' }} onClick={() => navigate('/login')}>
+                📱 Mobile / Email
+              </button>
+              <button className="btn-pri" style={{ fontSize: 11.5, padding: '8px 0' }} onClick={() => navigate('/signup')}>
+                ✨ Sign Up Free
+              </button>
+            </div>
           </div>
 
           <div style={{ height: 8 }} />
