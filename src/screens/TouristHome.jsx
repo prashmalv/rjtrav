@@ -122,7 +122,9 @@ export default function TouristHome() {
           <div className="sec-head"><h3>Recommended for You</h3><span className="more" onClick={() => navigate('/explore')}>More →</span></div>
           {destinations.slice(0, 3).map(d => (
             <div key={d.id} className="list-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/destination/${d.id}`)}>
-              <div className="lc-thumb" style={{ background: 'var(--grad-hero)', fontSize: 26 }}>{d.img}</div>
+              <div className="lc-thumb" style={{ overflow: 'hidden', padding: 0, flexShrink: 0 }}>
+                <img src={d.imgUrl} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { e.target.style.display='none' }} />
+              </div>
               <div className="lc-info">
                 <div className="lc-title">{d.name}</div>
                 <div className="lc-sub"><span>📍 {d.city}</span><span>⭐ {d.rating}</span></div>

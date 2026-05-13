@@ -30,8 +30,8 @@ export default function Explore() {
         <div className="content">
           {filtered.map(d => (
             <div key={d.id} className="list-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/destination/${d.id}`)}>
-              <div className="lc-thumb" style={{ fontSize: 28, background: 'var(--grad-hero)', borderRadius: 8 }}>
-                {d.img}
+              <div className="lc-thumb" style={{ overflow: 'hidden', padding: 0, flexShrink: 0 }}>
+                <img src={d.imgUrl} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { e.target.style.display='none' }} />
               </div>
               <div className="lc-info">
                 <div className="lc-title">{d.name}</div>

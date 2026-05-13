@@ -3,10 +3,8 @@ import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
 import { destinations } from '../context/AppContext'
 
-const HERO_IMGS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/24701-Jaipur%2C_Hawa_Mahal.jpg/320px-24701-Jaipur%2C_Hawa_Mahal.jpg',
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Amber_Fort-Jaipur.jpg/320px-Amber_Fort-Jaipur.jpg',
-]
+const HAWA_MAHAL = 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=82'
+const AMBER_FORT = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=82'
 
 export default function VisitorHome() {
   const navigate = useNavigate()
@@ -18,10 +16,9 @@ export default function VisitorHome() {
       {/* Visitor Hero */}
       <div className="visitor-hero">
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/24701-Jaipur%2C_Hawa_Mahal.jpg/640px-24701-Jaipur%2C_Hawa_Mahal.jpg"
+          src={HAWA_MAHAL}
           alt="Hawa Mahal"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
-          onError={e => { e.target.style.display = 'none' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', zIndex: 1 }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'var(--grad-hero)', opacity: 0.6, zIndex: 1 }} />
         <div className="visitor-hero-content">
@@ -76,7 +73,7 @@ export default function VisitorHome() {
 
           {/* Featured destination */}
           <div className="hero-card tall" style={{ cursor: 'pointer' }} onClick={() => navigate('/destination/2')}>
-            <img className="hero-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Amber_Fort-Jaipur.jpg/640px-Amber_Fort-Jaipur.jpg" alt="Amber Fort" onError={e => e.target.style.display = 'none'} />
+            <img className="hero-img" src={AMBER_FORT} alt="Amber Fort" />
             <div className="hero-overlay" />
             <span className="hero-pill">⭐ UNESCO</span>
             <div className="hero-name">Amber Fort & Palace</div>
@@ -86,7 +83,9 @@ export default function VisitorHome() {
           {/* Destination list */}
           {destinations.slice(0, 4).map(d => (
             <div key={d.id} className="list-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/destination/${d.id}`)}>
-              <div className="lc-thumb" style={{ fontSize: 26 }}>{d.img}</div>
+              <div className="lc-thumb" style={{ overflow: 'hidden', padding: 0, flexShrink: 0 }}>
+                <img src={d.imgUrl} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { e.target.style.cssText='display:flex;align-items:center;justify-content:center;font-size:26px' }} />
+              </div>
               <div className="lc-info">
                 <div className="lc-title">{d.name}</div>
                 <div className="lc-sub"><span>📍 {d.city}</span><span>⭐ {d.rating}</span></div>

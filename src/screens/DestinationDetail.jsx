@@ -12,7 +12,8 @@ export default function DestinationDetail() {
     <div className="app-shell">
       {/* Hero image */}
       <div style={{ height: 220, position: 'relative', flexShrink: 0, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
+        <img src={dest.imgUrl} alt={dest.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }} onError={e => { e.target.style.display='none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80, zIndex: 0 }}>
           {dest.img}
         </div>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(0,0,0,0.4) 0%,transparent 30%,transparent 60%,rgba(0,0,0,0.7))', zIndex: 2 }} />

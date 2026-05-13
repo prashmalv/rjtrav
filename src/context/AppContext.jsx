@@ -2,22 +2,34 @@ import { createContext, useContext, useState } from 'react'
 
 const AppContext = createContext(null)
 
+const Q = '?auto=format&fit=crop&w=600&q=82'
+const imgs = {
+  hawaMahal:   `https://images.unsplash.com/photo-1599661046289-e31897846e41${Q}`,
+  amberFort:   `https://images.unsplash.com/photo-1524492412937-b28074a5d7da${Q}`,
+  mehrangarh:  `https://images.unsplash.com/photo-1573473681523-91cf7a5e83b6${Q}`,
+  udaipur:     `https://images.unsplash.com/photo-1602216056096-3b40cc0c9944${Q}`,
+  jaisalmer:   `https://images.unsplash.com/photo-1477587458883-47145ed94245${Q}`,
+  tiger:       `https://images.unsplash.com/photo-1564760055775-d63b17a55c44${Q}`,
+  dunes:       `https://images.unsplash.com/photo-1528360983277-13d401cdc186${Q}`,
+  lakePichola: `https://images.unsplash.com/photo-1548013146-72479768bada${Q}`,
+}
+
 export const destinations = [
-  { id: 1, name: 'Hawa Mahal', city: 'Jaipur', rating: 4.7, reviews: 8247, category: 'Heritage', price: '₹50/200', fee: 50, img: '🏰', desc: 'Built in 1799 by Maharaja Sawai Pratap Singh, the iconic five-storey "Palace of Winds" features 953 small windows (jharokhas) decorated with intricate latticework.', badge: '⭐ UNESCO', bestTime: 'Oct–Mar' },
-  { id: 2, name: 'Amber Fort', city: 'Jaipur', rating: 4.8, reviews: 12340, category: 'Heritage', price: '₹100/500', fee: 100, img: '🏯', desc: 'A majestic fort-palace atop a hill, blending Rajput and Mughal architecture. Known for its ornate Sheesh Mahal (Mirror Palace) and stunning panoramic views.', badge: '⭐ UNESCO', bestTime: 'Oct–Mar' },
-  { id: 3, name: 'Mehrangarh Fort', city: 'Jodhpur', rating: 4.8, reviews: 9870, category: 'Heritage', price: 'Free', fee: 0, img: '🗼', desc: 'One of India\'s largest forts, rising 400 feet above Jodhpur. Houses a fine collection of palanquins, howdahs, royal cradles, arms, armour, and paintings.', badge: '⭐ Majestic', bestTime: 'Nov–Feb' },
-  { id: 4, name: 'City Palace Udaipur', city: 'Udaipur', rating: 4.9, reviews: 11200, category: 'Heritage', price: '₹250', fee: 250, img: '🏛️', desc: 'A stunning palace complex on the eastern banks of Lake Pichola. The Mewar dynasty\'s grandeur is on full display with Rajput and European architecture.', badge: '⭐ Royal', bestTime: 'Oct–Mar' },
-  { id: 5, name: 'Jaisalmer Fort', city: 'Jaisalmer', rating: 4.8, reviews: 7650, category: 'Heritage', price: 'Free', fee: 0, img: '🌟', desc: 'The "Golden Fort" rises from the Thar Desert like a mirage. A living fort where people still reside within its golden sandstone walls.', badge: '⭐ UNESCO', bestTime: 'Nov–Feb' },
-  { id: 6, name: 'Ranthambore', city: 'Sawai Madhopur', rating: 4.8, reviews: 5430, category: 'Wildlife', price: '₹500+', fee: 500, img: '🐅', desc: '62+ tigers roam the rugged terrain of Ranthambore, one of India\'s most famous tiger reserves. Also home to leopards, sloth bears, and crocodiles.', badge: '🐅 Tiger Reserve', bestTime: 'Oct–Jun' },
-  { id: 7, name: 'Sam Sand Dunes', city: 'Jaisalmer', rating: 4.7, reviews: 8900, category: 'Desert', price: '₹200', fee: 200, img: '🐪', desc: 'Experience the vast Thar Desert with golden sand dunes stretching to the horizon. Camel safaris, folk performances, and stunning sunsets await.', badge: '🐪 Desert', bestTime: 'Nov–Feb' },
-  { id: 8, name: 'Lake Pichola', city: 'Udaipur', rating: 4.9, reviews: 13400, category: 'Lakes', price: '₹450 boat', fee: 450, img: '⛵', desc: 'An artificial freshwater lake created in 1362. A boat ride offers stunning views of the City Palace, Lake Palace Hotel, and Jag Mandir island.', badge: '⛵ Scenic', bestTime: 'Oct–Mar' },
+  { id: 1, name: 'Hawa Mahal', city: 'Jaipur', rating: 4.7, reviews: 8247, category: 'Heritage', price: '₹50/200', fee: 50, img: '🏰', imgUrl: imgs.hawaMahal, desc: 'Built in 1799 by Maharaja Sawai Pratap Singh, the iconic five-storey "Palace of Winds" features 953 small windows (jharokhas) decorated with intricate latticework.', badge: '⭐ UNESCO', bestTime: 'Oct–Mar' },
+  { id: 2, name: 'Amber Fort', city: 'Jaipur', rating: 4.8, reviews: 12340, category: 'Heritage', price: '₹100/500', fee: 100, img: '🏯', imgUrl: imgs.amberFort, desc: 'A majestic fort-palace atop a hill, blending Rajput and Mughal architecture. Known for its ornate Sheesh Mahal (Mirror Palace) and stunning panoramic views.', badge: '⭐ UNESCO', bestTime: 'Oct–Mar' },
+  { id: 3, name: 'Mehrangarh Fort', city: 'Jodhpur', rating: 4.8, reviews: 9870, category: 'Heritage', price: 'Free', fee: 0, img: '🗼', imgUrl: imgs.mehrangarh, desc: 'One of India\'s largest forts, rising 400 feet above Jodhpur. Houses a fine collection of palanquins, howdahs, royal cradles, arms, armour, and paintings.', badge: '⭐ Majestic', bestTime: 'Nov–Feb' },
+  { id: 4, name: 'City Palace Udaipur', city: 'Udaipur', rating: 4.9, reviews: 11200, category: 'Heritage', price: '₹250', fee: 250, img: '🏛️', imgUrl: imgs.udaipur, desc: 'A stunning palace complex on the eastern banks of Lake Pichola. The Mewar dynasty\'s grandeur is on full display with Rajput and European architecture.', badge: '⭐ Royal', bestTime: 'Oct–Mar' },
+  { id: 5, name: 'Jaisalmer Fort', city: 'Jaisalmer', rating: 4.8, reviews: 7650, category: 'Heritage', price: 'Free', fee: 0, img: '🌟', imgUrl: imgs.jaisalmer, desc: 'The "Golden Fort" rises from the Thar Desert like a mirage. A living fort where people still reside within its golden sandstone walls.', badge: '⭐ UNESCO', bestTime: 'Nov–Feb' },
+  { id: 6, name: 'Ranthambore', city: 'Sawai Madhopur', rating: 4.8, reviews: 5430, category: 'Wildlife', price: '₹500+', fee: 500, img: '🐅', imgUrl: imgs.tiger, desc: '62+ tigers roam the rugged terrain of Ranthambore, one of India\'s most famous tiger reserves. Also home to leopards, sloth bears, and crocodiles.', badge: '🐅 Tiger Reserve', bestTime: 'Oct–Jun' },
+  { id: 7, name: 'Sam Sand Dunes', city: 'Jaisalmer', rating: 4.7, reviews: 8900, category: 'Desert', price: '₹200', fee: 200, img: '🐪', imgUrl: imgs.dunes, desc: 'Experience the vast Thar Desert with golden sand dunes stretching to the horizon. Camel safaris, folk performances, and stunning sunsets await.', badge: '🐪 Desert', bestTime: 'Nov–Feb' },
+  { id: 8, name: 'Lake Pichola', city: 'Udaipur', rating: 4.9, reviews: 13400, category: 'Lakes', price: '₹450 boat', fee: 450, img: '⛵', imgUrl: imgs.lakePichola, desc: 'An artificial freshwater lake created in 1362. A boat ride offers stunning views of the City Palace, Lake Palace Hotel, and Jag Mandir island.', badge: '⛵ Scenic', bestTime: 'Oct–Mar' },
 ]
 
 export const packages = [
   {
     id: 1, name: 'Royal Rajasthan Trail', cities: 'Jaipur · Udaipur · Jaisalmer',
     days: 7, nights: 6, price: 38499, rating: 4.9, reviews: 892, booked: 1247,
-    img: '🏯', badge: '⭐ Bestseller',
+    img: '🏯', imgUrl: imgs.amberFort, badge: '⭐ Bestseller',
     includes: ['4★ Stay', 'Transport', 'Meals', 'Entry'],
     itinerary: [
       { day: 'Day 1', title: 'Arrive Jaipur', desc: 'Hawa Mahal · City Palace · Bazaar' },
@@ -29,7 +41,7 @@ export const packages = [
   {
     id: 2, name: 'Desert Safari Escape', cities: 'Jodhpur · Jaisalmer',
     days: 4, nights: 3, price: 18999, rating: 4.8, reviews: 540, booked: 632,
-    img: '🐪', badge: '🐪 Adventure',
+    img: '🐪', imgUrl: imgs.dunes, badge: '🐪 Adventure',
     includes: ['Luxury Tent', 'Camel Safari', 'Breakfast', 'Entry'],
     itinerary: [
       { day: 'Day 1', title: 'Jodhpur', desc: 'Mehrangarh · Blue City walk' },
@@ -40,7 +52,7 @@ export const packages = [
   {
     id: 3, name: 'Lakes & Palaces', cities: 'Udaipur · Pushkar',
     days: 5, nights: 4, price: 24999, rating: 4.9, reviews: 380, booked: 415,
-    img: '⛵', badge: '⛵ Romantic',
+    img: '⛵', imgUrl: imgs.lakePichola, badge: '⛵ Romantic',
     includes: ['Heritage Hotel', 'Boat Ride', 'Meals', 'Guide'],
     itinerary: [
       { day: 'Day 1-3', title: 'Udaipur', desc: 'City Palace · Lake Pichola · Saheliyon' },
