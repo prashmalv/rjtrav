@@ -3,10 +3,12 @@ import { useApp, destinations, packages } from '../context/AppContext'
 import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
 import LanguageSelector from '../components/LanguageSelector'
+import { useT } from '../i18n'
 
 export default function TouristHome() {
   const navigate = useNavigate()
-  const { user, showToast } = useApp()
+  const { user, showToast, appLanguage } = useApp()
+  const t = useT(appLanguage)
 
   return (
     <div className="app-shell">
@@ -17,7 +19,7 @@ export default function TouristHome() {
           <StatusBar light />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
             <div>
-              <div style={{ fontSize: 11, opacity: 0.9 }}>Namaste 🙏</div>
+              <div style={{ fontSize: 11, opacity: 0.9 }}>{t.namaste}</div>
               <div style={{ fontSize: 18, fontWeight: 800 }}>{user?.name || 'Vikram Singh'}</div>
               <div style={{ fontSize: 10.5, opacity: 0.85, marginTop: 2 }}>📍 Jaipur · Heritage Explorer</div>
             </div>
@@ -46,19 +48,19 @@ export default function TouristHome() {
           {/* KPI Row */}
           <div className="kpi-row">
             <div className="kpi">
-              <div className="kl">Upcoming Trip</div>
+              <div className="kl">{t.upcomingTrip}</div>
               <div className="kv" style={{ fontSize: 14, color: 'var(--primary-dark)' }}>Royal Trail</div>
               <div className="kd">⏱ in 12 days</div>
             </div>
             <div className="kpi">
-              <div className="kl">Reward Points</div>
+              <div className="kl">{t.rewardPoints}</div>
               <div className="kv">2,840</div>
               <div className="kd">+340 this month</div>
             </div>
           </div>
 
           {/* Quick actions */}
-          <div className="sec-head"><h3>Quick Actions</h3></div>
+          <div className="sec-head"><h3>{t.quickActions}</h3></div>
           <div className="cat-grid">
             {[
               ['🗺', 'Explore', '/explore'],
@@ -117,7 +119,7 @@ export default function TouristHome() {
           </div>
 
           {/* Recommended */}
-          <div className="sec-head"><h3>Recommended for You</h3><span className="more" onClick={() => navigate('/explore')}>More →</span></div>
+          <div className="sec-head"><h3>{t.recommendedForYou}</h3><span className="more" onClick={() => navigate('/explore')}>{t.more}</span></div>
           {destinations.slice(0, 3).map(d => (
             <div key={d.id} className="list-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/destination/${d.id}`)}>
               <div className="lc-thumb" style={{ overflow: 'hidden', padding: 0, flexShrink: 0 }}>

@@ -1,17 +1,19 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
+import { useT } from '../i18n'
 
 export default function BottomNav({ dark }) {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isLoggedIn } = useApp()
+  const { isLoggedIn, appLanguage } = useApp()
+  const t = useT(appLanguage)
 
   const items = [
-    { ico: '🏠', label: 'Home', path: isLoggedIn ? '/home' : '/visitor' },
-    { ico: '🧭', label: 'Explore', path: '/explore' },
-    { ico: '🎫', label: 'Trips', path: '/my-trips' },
-    { ico: '🤖', label: 'Padharo', path: '/ai-chat' },
-    { ico: '👤', label: isLoggedIn ? 'Me' : 'Sign In', path: isLoggedIn ? '/profile' : '/login' },
+    { ico: '🏠', label: t.home, path: isLoggedIn ? '/home' : '/visitor' },
+    { ico: '🧭', label: t.explore, path: '/explore' },
+    { ico: '🎫', label: t.trips, path: '/my-trips' },
+    { ico: '🤖', label: t.chat, path: '/ai-chat' },
+    { ico: '👤', label: isLoggedIn ? t.profile : t.home, path: isLoggedIn ? '/profile' : '/login' },
   ]
 
   return (
@@ -21,7 +23,7 @@ export default function BottomNav({ dark }) {
           (item.path === '/home' && location.pathname === '/home') ||
           (item.path === '/visitor' && location.pathname === '/visitor')
         return (
-          <button key={item.label} className={`bn-item${active ? ' active' : ''}`} onClick={() => navigate(item.path)}>
+          <button key={item.path} className={`bn-item${active ? ' active' : ''}`} onClick={() => navigate(item.path)}>
             <span className="bn-ico">{item.ico}</span>
             <span>{item.label}</span>
           </button>
