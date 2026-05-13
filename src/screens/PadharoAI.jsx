@@ -6,11 +6,11 @@ import BottomNav from '../components/BottomNav'
 import LanguageSelector from '../components/LanguageSelector'
 
 const QUICK_ACTIONS = [
-  { ico: '🗺', label: 'Plan My Day' },
-  { ico: '🏰', label: 'Top Forts' },
-  { ico: '🍽', label: 'Local Food' },
-  { ico: '🐅', label: 'Wildlife' },
-  { ico: '🛍', label: 'Shopping' },
+  { ico: '🗺', label: 'Plan My Day', query: 'Plan a day-by-day itinerary for my Rajasthan trip based on my travel style and interests' },
+  { ico: '🏰', label: 'Top Forts', query: 'What are the top heritage forts and palaces in Rajasthan? Include entry fees and best time to visit each' },
+  { ico: '🍽', label: 'Local Food', query: 'What are the must-try local dishes and best food places in Rajasthan? Include famous restaurants' },
+  { ico: '🐅', label: 'Wildlife', query: 'Tell me about wildlife safari at Ranthambore National Park — how to book, which zone, timing, and best tips' },
+  { ico: '🛍', label: 'Shopping', query: 'Where should I go shopping in Rajasthan? What are the best markets and what to buy as souvenirs?' },
   { ico: '🔭', label: 'Visual AI', link: '/visual-ai', accent: true },
 ]
 
@@ -27,41 +27,65 @@ async function callAI(messages, userProfile, language) {
     body: JSON.stringify({ messages, userProfile, language }),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.error || 'AI error')
+  if (!res.ok || data.error) throw new Error(data.error || 'AI error')
   return data.reply
 }
 
-// Smart local fallback when API is not configured
 function localFallback(msg, profile) {
   const m = msg.toLowerCase()
   const style = profile?.travelStyle || 'traveller'
   const interests = profile?.interests || []
 
-  if (m.includes('itinerary') || m.includes('plan') || m.includes('days') || m.includes('trip')) {
+  if (m.includes('itinerary') || m.includes('plan') || m.includes('days') || m.includes('trip') || m.includes('day-by-day') || m.includes('day by day')) {
     return `Here's a suggested Rajasthan itinerary for a ${style}:\n\n🗓 **Day 1–2 · Jaipur** — Amber Fort, Hawa Mahal, City Palace, Jantar Mantar. Stay in Pink City heritage hotel.\n🗓 **Day 3–4 · Udaipur** — City Palace, Lake Pichola boat ride, Sajjangarh at sunset.\n🗓 **Day 5–6 · Jodhpur** — Mehrangarh Fort, Blue City walk, Umaid Bhawan.\n🗓 **Day 7 · Jaisalmer** — Golden Fort, Sam Sand Dunes camel safari, desert camp night.\n\n💡 Best season: October–March. Book safari & camp 2 weeks ahead.`
   }
-  if (m.includes('hawa') || m.includes('mahal') || m.includes('wind')) {
+  if (m.includes('fort') || m.includes('palace') || m.includes('heritage') || m.includes('top fort')) {
+    return `🏰 **Top Heritage Forts & Palaces in Rajasthan**\n\n🥇 **Amber Fort, Jaipur** — ₹100 (Indian) / ₹500 (Foreign) · Visit 8–10 AM before crowds\n🥈 **Mehrangarh Fort, Jodhpur** — Free entry · Stunning views of Blue City\n🥉 **Jaisalmer Fort** — Free · Only living fort in India, 3,000 residents inside\n🏛 **City Palace, Udaipur** — ₹250 · Royal Mewar dynasty grandeur on Lake Pichola\n🏯 **Hawa Mahal, Jaipur** — ₹50 / ₹200 · 953 windows, iconic pink sandstone\n🏰 **Ranthambore Fort** — Free (inside national park) · 10th-century hill fort\n\n💡 Buy the ASI composite ticket at Amber Fort — saves ₹200 if visiting multiple UNESCO sites.`
+  }
+  if (m.includes('hawa') || m.includes('wind')) {
     return `🏰 **Hawa Mahal** (Palace of Winds)\n\n📍 Old City, Jaipur · ⭐ 4.7/5\n⏰ 9 AM – 4:30 PM · 🎫 ₹50 (Indian) / ₹200 (Foreign)\n\nBuilt in 1799 with 953 windows so royal women could observe street festivals. Best photographed from street level at sunrise — the pink sandstone glows golden. There are excellent chai stalls right outside!`
   }
   if (m.includes('jaipur') || m.includes('pink city')) {
     return `🌸 **Jaipur — The Pink City**\n\n**Must-visit:**\n• Amber Fort (8AM, book elephant ride ₹900)\n• Hawa Mahal (sunrise for best photos)\n• City Palace + Jantar Mantar (half day)\n• Nahargarh Fort for sunset panorama\n\n**Food:** Pyaaz kachori at Rawat Mishthan, thali at Chokhi Dhani\n\n💡 ${profile?.homeCity === 'Delhi' ? 'From Delhi, Jaipur is 5h by train (Shatabdi). Avoid Friday–Sunday — Khatu Shyam pilgrims make it very crowded.' : 'Avoid weekends — the city gets very crowded with pilgrims.'}`
   }
-  if (m.includes('food') || m.includes('eat') || m.includes('thali') || m.includes('cuisine')) {
-    return `🍽 **Rajasthani Food Guide**\n\n**Must-try dishes:**\n• Dal Baati Churma — the iconic Rajasthani meal\n• Laal Maas — fiery red mutton curry\n• Pyaaz Kachori — flaky onion pastry (Jaipur)\n• Ghewar — sweet milk-based dessert\n• Ker Sangri — dried desert beans\n\n**Best spots:** Natraj Restaurant (Jaipur), Janta Sweet Home (Jodhpur), Hotel Shahi Kila (Jaisalmer).`
+  if (m.includes('food') || m.includes('eat') || m.includes('thali') || m.includes('cuisine') || m.includes('dish') || m.includes('restaurant')) {
+    return `🍽 **Rajasthani Food Guide**\n\n**Must-try dishes:**\n• **Dal Baati Churma** — the iconic Rajasthani meal\n• **Laal Maas** — fiery red mutton curry with mathania chillies\n• **Pyaaz Kachori** — flaky onion pastry (Jaipur specialty)\n• **Ghewar** — sweet milk-based festive dessert\n• **Ker Sangri** — dried desert beans curry\n• **Makhaniya Lassi** — rich saffron lassi, Jodhpur specialty\n\n**Best spots:**\n• Natraj Restaurant, Jaipur — ₹180 unlimited thali\n• Janta Sweet Home, Jodhpur — kachori & mirchi bada\n• Trio Restaurant, Jaisalmer — fort view + Rajasthani thali`
   }
-  if (m.includes('safari') || m.includes('tiger') || m.includes('ranthambore') || m.includes('wildlife')) {
-    return `🐅 **Ranthambore National Park**\n\n⏰ Season: October to June (avoid monsoon)\n🎫 Zone 1–5 safaris: ₹700/person (jeep) or ₹500 (canter)\n📱 Book online at **rajasthanwildlife.in** — 60 days in advance\n\n🕕 **Timings:** Dawn (6:30–10 AM) and Dusk (2:30–6 PM)\n🐅 Tiger sighting probability: ~75% in peak season (Nov–Mar)\n\n💡 ${style === 'Family' ? 'Family tip: Canter (larger vehicle) is safer with kids. Zone 3 & 4 have best tiger sightings.' : 'Book Zone 1 or 3 for best tiger sighting chances.'}`
+  if (m.includes('safari') || m.includes('tiger') || m.includes('ranthambore') || m.includes('wildlife') || m.includes('national park')) {
+    return `🐅 **Ranthambore National Park**\n\n⏰ Season: October to June (closed monsoon)\n🎫 Jeep safari: ₹700/person · Canter: ₹500/person\n📱 Book at **rajasthanwildlife.in** — up to 60 days advance\n\n🕕 **Timings:** Dawn (6:30–10 AM) and Dusk (2:30–6 PM)\n🐅 Tiger sighting chance: ~75% in peak season (Nov–Mar)\n\n**Zones:** Zone 1, 2, 3 — best tiger sighting. Zone 4, 5 — good for leopard & sloth bear.\n\n💡 ${style === 'Family' ? 'Family tip: Canter (larger vehicle) is safer with kids. Book Zone 3 or 4.' : 'Book Zone 1 for highest tiger sighting probability. Jeep beats canter for experience.'}`
+  }
+  if (m.includes('shop') || m.includes('market') || m.includes('buy') || m.includes('baazar') || m.includes('bazaar') || m.includes('souvenir')) {
+    return `🛍 **Rajasthan Shopping Guide**\n\n**Must-buy items:**\n• **Blue Pottery** — Jaipur's signature turquoise craft\n• **Bandhani** (Tie-dye fabric) — Jodhpur & Jaipur\n• **Mojari** (embroidered shoes) — Jaipur & Jodhpur\n• **Mirror-work textiles** — Jaisalmer & Barmer\n• **Camel leather goods** — Jaisalmer\n• **Silver jewellery** — Pushkar & Jaipur's Johari Bazaar\n\n**Best markets:**\n• Johari Bazaar, Jaipur — gems & jewellery 💎\n• Sardar Market, Jodhpur — spices & handicrafts\n• Sadar Bazaar, Jaisalmer — desert crafts & leather\n• Pushkar Bazaar — silver, tie-dye, backpacker items`
   }
   if (m.includes('desert') || m.includes('dune') || m.includes('camel') || m.includes('jaisalmer')) {
     return `🏜 **Jaisalmer & Sam Sand Dunes**\n\n🏰 Jaisalmer Fort — the only living fort in India, 3,000 residents inside\n🐪 Sam Sand Dunes — 42 km from city, camel safari at sunset (₹300/hour)\n🌌 Desert Camp — overnight tents with folk music & bonfire from ₹2,500\n\n**Best time:** November to February\n**Tip:** The fort glows golden at sunset — catch it from the Jain temples inside.`
   }
   if (m.includes('pushkar')) {
-    return `🌸 **Pushkar**\n\n📍 250 km from Jaipur · World's only Brahma Temple\n🐪 **Camel Fair:** November (dates change yearly, check official calendar)\n\n**Must-do:**\n• Holy dip at Pushkar Lake (one of 5 sacred lakes in India)\n• Brahma Temple darshan (5AM–1:30PM, 3–9PM)\n• Sunset from Savitri Temple hilltop\n• Bazaar shopping — silver jewellery, leather goods\n\n💡 Pushkar is vegetarian & alcohol-free city — respect local rules.`
+    return `🌸 **Pushkar**\n\n📍 250 km from Jaipur · World's only Brahma Temple\n🐪 **Camel Fair:** November (check official calendar for exact dates)\n\n**Must-do:**\n• Holy dip at Pushkar Lake (one of 5 sacred lakes in India)\n• Brahma Temple darshan (5AM–1:30PM, 3–9PM)\n• Sunset from Savitri Temple hilltop (rope-way available)\n• Bazaar shopping — silver jewellery, leather goods\n\n💡 Pushkar is vegetarian & alcohol-free city — respect local customs.`
   }
   if (interests.includes('Photography') && (m.includes('photo') || m.includes('shot') || m.includes('instagram'))) {
     return `📸 **Top Photography Spots in Rajasthan**\n\n🌅 **Golden Hour shots:**\n• Hawa Mahal facade — MI Road, Jaipur (sunrise)\n• Mehrangarh Fort overview of blue city (sunset)\n• Sam Sand Dunes silhouettes (sunset)\n• Lake Pichola with City Palace reflection (dusk)\n\n🏯 **Architecture:**\n• Amber Fort mirror corridors (avoid 11AM–3PM harsh light)\n• Jaisalmer Fort from Vyas Chhatri at magic hour\n\n💡 Blue Hour in Jodhpur is extraordinary — climb Mehrangarh at 6PM.`
   }
-  return `I'd love to help you explore Rajasthan! 🏰\n\nI can assist with:\n• **Itinerary planning** — personalised for ${style} travellers\n• **Heritage sites** — forts, palaces, havelis with entry details\n• **Wildlife** — Ranthambore safari bookings & tips\n• **Local food** — best dishes and restaurants\n• **Practical tips** — transport, safety, best seasons\n\nWhat would you like to explore?`
+  return `I'd love to help you explore Rajasthan! 🏰\n\nI can assist with:\n• **Itinerary planning** — personalised for ${style} travellers\n• **Heritage sites** — forts, palaces, havelis with entry details\n• **Wildlife** — Ranthambore safari bookings & tips\n• **Local food** — must-try dishes and best restaurants\n• **Shopping** — best markets and what to buy\n• **Practical tips** — transport, safety, best seasons\n\nWhat would you like to explore?`
+}
+
+function RenderText({ text }) {
+  return (
+    <div style={{ lineHeight: 1.6, fontSize: 13 }}>
+      {text.split('\n').map((line, li) => {
+        const parts = line.split(/\*\*([^*]+)\*\*/g)
+        return (
+          <div key={li} style={{ minHeight: line.trim() === '' ? 6 : undefined }}>
+            {parts.map((part, pi) =>
+              pi % 2 === 1
+                ? <strong key={pi}>{part}</strong>
+                : <span key={pi}>{part}</span>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default function PadharoAI() {
@@ -71,7 +95,9 @@ export default function PadharoAI() {
   const [msgs, setMsgs] = useState([])
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
-  const [aiError, setAiError] = useState(false)
+  const appLanguageRef = useRef(appLanguage)
+  useEffect(() => { appLanguageRef.current = appLanguage }, [appLanguage])
+
   const bottomRef = useRef(null)
 
   const greeting = user?.name
@@ -88,29 +114,43 @@ export default function PadharoAI() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [msgs, typing])
 
-  const sendMsg = async (text) => {
-    const msg = (text || input).trim()
-    if (!msg) return
-    setInput('')
-    setAiError(false)
-    const newMsgs = [...msgs, { from: 'user', text: msg }]
+  const doSendMsg = async (msg, history) => {
+    const newMsgs = [...history, { from: 'user', text: msg }]
     setMsgs(newMsgs)
     setTyping(true)
-
     try {
-      const reply = await callAI(newMsgs, user, appLanguage)
+      const reply = await callAI(newMsgs, user, appLanguageRef.current)
       setTyping(false)
       setMsgs(prev => [...prev, { from: 'bot', text: reply }])
     } catch (err) {
       setTyping(false)
       if (err.message === 'AI_NOT_CONFIGURED') {
-        const fallback = localFallback(msg, user)
-        setMsgs(prev => [...prev, { from: 'bot', text: fallback }])
+        setMsgs(prev => [...prev, { from: 'bot', text: localFallback(msg, user) }])
       } else {
-        setAiError(true)
         setMsgs(prev => [...prev, { from: 'bot', text: "I'm having trouble connecting right now. Please try again in a moment. 🔄" }])
       }
     }
+  }
+
+  const sendMsg = (text) => {
+    const msg = (text || input).trim()
+    if (!msg || typing) return
+    setInput('')
+    doSendMsg(msg, msgs)
+  }
+
+  const handleQuickAction = (action) => {
+    if (action.link) { navigate(action.link); return }
+    const query = action.query || action.label
+    const history = [{ from: 'bot', text: greeting }]
+    setMsgs(history)
+    setView('chat')
+    setTimeout(() => doSendMsg(query, history), 80)
+  }
+
+  const resetChat = () => {
+    setMsgs([{ from: 'bot', text: greeting }])
+    setInput('')
   }
 
   // ── Chat view ─────────────────────────────────────────────────────────────
@@ -126,19 +166,25 @@ export default function PadharoAI() {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13.5, fontWeight: 800 }}>Padharo AI</div>
-            <div style={{ fontSize: 10, opacity: 0.85 }}>{typing ? '⚡ Thinking...' : '● Online · AI-powered'}</div>
+            <div style={{ fontSize: 10, opacity: 0.85 }}>{typing ? '⚡ Thinking...' : `● Online · ${appLanguage}`}</div>
           </div>
           <LanguageSelector light />
+          <button
+            onClick={resetChat}
+            style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 8, padding: '5px 8px', color: '#fff', fontSize: 10, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
+          >↺ Reset</button>
         </div>
 
         <div className="screen-scroll" style={{ background: 'linear-gradient(180deg,var(--soft) 0%,var(--bg) 100%)', padding: '12px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ textAlign: 'center', fontSize: 10, color: 'var(--ink-mute)', fontWeight: 600 }}>Today · {appLanguage}</div>
+          <div style={{ textAlign: 'center', fontSize: 10, color: 'var(--ink-mute)', fontWeight: 600 }}>Today · Responding in {appLanguage}</div>
 
           {msgs.map((m, i) =>
             m.from === 'bot' ? (
               <div key={i} className="chat-msg-bot">
                 <div className="chat-avatar">🤖</div>
-                <div className="chat-bubble-bot" style={{ whiteSpace: 'pre-line' }}>{m.text}</div>
+                <div className="chat-bubble-bot">
+                  <RenderText text={m.text} />
+                </div>
               </div>
             ) : (
               <div key={i} className="chat-msg-user">
@@ -223,7 +269,6 @@ export default function PadharoAI() {
       <div className="screen-scroll">
         <div className="content" style={{ marginTop: -10 }}>
 
-          {/* Profile personalisation card */}
           {user && (
             <div style={{ background: 'linear-gradient(135deg,var(--primary-ghost),var(--soft))', border: '1px solid var(--primary-ghost)', borderRadius: 14, padding: '11px 13px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -231,7 +276,7 @@ export default function PadharoAI() {
                   <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--primary-dark)', marginBottom: 5 }}>
                     🎯 Personalised for {user.name || 'You'}
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                     {user.travelStyle && (
                       <span className="chip chip-primary" style={{ fontSize: 10, padding: '2px 8px' }}>
                         {user.travelStyle === 'Solo' ? '🧍' : user.travelStyle === 'Couple' ? '👫' : user.travelStyle === 'Family' ? '👨‍👩‍👧' : '👥'} {user.travelStyle}
@@ -250,18 +295,13 @@ export default function PadharoAI() {
             </div>
           )}
 
-          {/* Quick actions */}
           <div className="surface" style={{ padding: 12 }}>
             <div className="bold" style={{ fontSize: 13, marginBottom: 8 }}>Quick Actions</div>
             <div className="grid-2">
               {QUICK_ACTIONS.map(a => (
                 <button
                   key={a.label}
-                  onClick={() => {
-                    if (a.link) { navigate(a.link); return }
-                    setView('chat')
-                    setTimeout(() => sendMsg(`${a.ico} ${a.label}`), 300)
-                  }}
+                  onClick={() => handleQuickAction(a)}
                   style={{
                     padding: '10px 6px', textAlign: 'center',
                     background: a.accent ? 'var(--accent-light)' : 'linear-gradient(135deg,var(--primary-ghost),var(--soft))',
@@ -279,13 +319,12 @@ export default function PadharoAI() {
             </div>
           </div>
 
-          {/* Try asking */}
           <div className="ai-box">
             <div className="bold" style={{ fontSize: 12, color: 'var(--ink)', marginBottom: 4 }}>💡 Try asking</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               {SUGGESTIONS.map(s => (
                 <div key={s} style={{ fontSize: 11, color: 'var(--ink-soft)', fontStyle: 'italic', cursor: 'pointer' }}
-                  onClick={() => { setView('chat'); setTimeout(() => sendMsg(s.replace(/"/g, '')), 300) }}>
+                  onClick={() => handleQuickAction({ query: s.replace(/"/g, '').trim() })}>
                   {s}
                 </div>
               ))}

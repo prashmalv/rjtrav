@@ -446,6 +446,22 @@ export default function ItineraryBuilder() {
 
                   {expandedDay === i && (
                     <div style={{ padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {day.isCrowded && (
+                        <div style={{ background: '#FFF7ED', border: '1.5px dashed #F59E0B', borderRadius: 10, padding: '10px 12px' }}>
+                          <div style={{ fontSize: 11.5, fontWeight: 800, color: '#92400E', marginBottom: 4 }}>
+                            💡 Optional AI Suggestion — Avoid the Rush
+                          </div>
+                          <div style={{ fontSize: 11, color: '#78350F', lineHeight: 1.55, marginBottom: 6 }}>
+                            Weekend crowd at {day.city} is typically 3× higher than weekdays. You can save 1–2 hours of queue time by adjusting your visit times.
+                          </div>
+                          <div style={{ fontSize: 11, color: '#065F46', fontWeight: 600, background: 'rgba(255,255,255,0.7)', borderRadius: 7, padding: '6px 8px', borderLeft: '3px solid #10B981' }}>
+                            ✅ Visit major attractions before 9 AM or after 4 PM · Consider shifting to a nearby quieter site during peak hours (11 AM – 3 PM)
+                          </div>
+                          <div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 5, fontStyle: 'italic' }}>
+                            This is just a suggestion — your itinerary stays as planned. Follow it if you want a more relaxed experience.
+                          </div>
+                        </div>
+                      )}
                       {[['🌅 Morning', day.morning], ['☀️ Afternoon', day.afternoon], ['🌙 Evening', day.evening]].map(([label, plan]) => (
                         <div key={label} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                           <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-mute)', width: 70, flexShrink: 0 }}>{label}</span>

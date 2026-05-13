@@ -23,11 +23,14 @@ export default function Packages() {
 
           {packages.map(pkg => (
             <div key={pkg.id} className="booking-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/package/${pkg.id}`)}>
-              <div className="booking-card-img" style={{ background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 62, position: 'relative' }}>
-                {pkg.img}
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(0,0,0,0.1),rgba(0,0,0,0.6))', zIndex: 1 }} />
+              <div className="booking-card-img" style={{ position: 'relative', overflow: 'hidden', background: 'var(--grad-hero)' }}>
+                <img src={pkg.imgUrl} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', position: 'absolute', inset: 0 }} onError={e => { e.target.style.display = 'none' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.65))', zIndex: 1 }} />
                 <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 2 }}>
-                  <span className="chip chip-accent">{pkg.badge} · {pkg.booked.toLocaleString()} booked</span>
+                  <span className="chip chip-accent">{pkg.badge}</span>
+                </div>
+                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 2, background: 'rgba(0,0,0,0.55)', borderRadius: 8, padding: '3px 7px' }}>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, color: '#fff' }}>🔥 {pkg.booked.toLocaleString()} booked</span>
                 </div>
                 <div style={{ position: 'absolute', bottom: 10, left: 10, color: '#fff', zIndex: 2 }}>
                   <div style={{ fontSize: 16, fontWeight: 800, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{pkg.name}</div>

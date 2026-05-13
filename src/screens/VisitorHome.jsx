@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
+import LanguageSelector from '../components/LanguageSelector'
 import { destinations } from '../context/AppContext'
 
 const HAWA_MAHAL = 'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg'
@@ -16,25 +17,27 @@ export default function VisitorHome() {
       {/* Visitor Hero */}
       <div className="visitor-hero">
         <img
-          src={HAWA_MAHAL}
-          alt="Hawa Mahal"
+          src="/banner1.jpeg"
+          alt="Rajasthan"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', zIndex: 1 }}
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'var(--grad-hero)', opacity: 0.6, zIndex: 1 }} />
         <div className="visitor-hero-content">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'auto' }}>
             <div style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(10px)', padding: '6px 10px', borderRadius: 14, display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: '#fff' }}>
               🏰 RJ Tourism
             </div>
-            <button
-              onClick={() => navigate('/login')}
-              style={{ background: 'linear-gradient(135deg,#F59E0B,#D97706)', color: '#3D1F00', padding: '7px 16px', borderRadius: 14, fontSize: 12, fontWeight: 800 }}
-            >
-              Sign In →
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <LanguageSelector light />
+              <button
+                onClick={() => navigate('/login')}
+                style={{ background: 'linear-gradient(135deg,#F59E0B,#D97706)', color: '#3D1F00', padding: '7px 16px', borderRadius: 14, fontSize: 12, fontWeight: 800, border: 'none', cursor: 'pointer' }}
+              >
+                Sign In →
+              </button>
+            </div>
           </div>
           <span style={{ background: 'rgba(245,158,11,0.95)', color: '#3D1F00', fontSize: 9.5, fontWeight: 800, letterSpacing: 0.5, padding: '3px 8px', borderRadius: 8, alignSelf: 'flex-start', marginBottom: 6 }}>⭐ #1 HERITAGE STATE</span>
-          <h2 style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.05, textShadow: '0 2px 6px rgba(0,0,0,0.6)', marginBottom: 4 }}>Discover the Land of Kings</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.05, textShadow: '0 2px 6px rgba(0,0,0,0.6)', marginBottom: 4 }}>Discover the Land of Maharajas</h2>
           <div style={{ fontSize: 11, opacity: 0.95, fontWeight: 600 }}>पधारो म्हारे देश · Browse without signing in</div>
         </div>
       </div>
@@ -61,10 +64,19 @@ export default function VisitorHome() {
           </div>
 
           {/* Categories */}
-          <div className="sec-head"><h3>Featured Heritage</h3><span className="more" onClick={() => navigate('/explore')}>View all 42 →</span></div>
+          <div className="sec-head"><h3>Explore by Category</h3><span className="more" onClick={() => navigate('/explore')}>View all →</span></div>
           <div className="cat-grid">
-            {[['🏰', 'Forts'], ['🐅', 'Wildlife'], ['🐪', 'Desert'], ['🎭', 'Culture'], ['⛵', 'Lakes'], ['🕌', 'Temples'], ['🛍', 'Shopping'], ['🍽', 'Food']].map(([ico, nm]) => (
-              <div key={nm} className="cat-tile" onClick={() => navigate('/explore')}>
+            {[
+              ['🏰', 'Forts', '/explore?cat=Heritage'],
+              ['🐅', 'Wildlife', '/explore?cat=Wildlife'],
+              ['🐪', 'Desert', '/explore?cat=Desert'],
+              ['⛵', 'Lakes', '/explore?cat=Lakes'],
+              ['🕌', 'Temples', '/explore'],
+              ['🛍', 'Shopping', '/explore'],
+              ['🍽', 'Food', '/explore'],
+              ['📦', 'Packages', '/packages'],
+            ].map(([ico, nm, path]) => (
+              <div key={nm} className="cat-tile" onClick={() => navigate(path)}>
                 <div className="cat-ico">{ico}</div>
                 <div className="cat-nm">{nm}</div>
               </div>
