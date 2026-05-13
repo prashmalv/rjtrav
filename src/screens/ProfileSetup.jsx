@@ -52,10 +52,10 @@ export default function ProfileSetup() {
         <div style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ fontSize: 11, opacity: 0.85, marginBottom: 4 }}>Step {step} of 3</div>
           <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 2 }}>
-            {step === 1 ? '👋 Aapka swagat hai!' : step === 2 ? '🎯 Aapki interests?' : '🗺 Aapka safar style?'}
+            {step === 1 ? '👋 Welcome!' : step === 2 ? '🎯 Your Interests' : '🗺 Travel Style'}
           </div>
           <div style={{ fontSize: 11, opacity: 0.9 }}>
-            {step === 1 ? 'Basic info taaki hum aapko personalize kar sakein' : step === 2 ? 'AI aapke liye best places suggest karega' : 'Iske basis pe itinerary banegi'}
+            {step === 1 ? 'Tell us a bit about yourself to personalise your experience' : step === 2 ? 'AI will suggest the best places based on your interests' : 'We will build your itinerary based on this'}
           </div>
           {/* Progress dots */}
           <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
@@ -127,8 +127,8 @@ export default function ProfileSetup() {
                 </div>
               </div>
               <div className="ai-box">
-                <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>🤖 Padharo AI sikhega</div>
-                <div className="text-xs" style={{ color: 'var(--ink-soft)', lineHeight: 1.5, marginTop: 3 }}>Aapki city se Rajasthan travel patterns ke basis pe AI smart route suggest karega — crowded days avoid karke!</div>
+                <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>🤖 Padharo AI learns your preferences</div>
+                <div className="text-xs" style={{ color: 'var(--ink-soft)', lineHeight: 1.5, marginTop: 3 }}>Based on your home city's travel patterns, AI will suggest smart routes to Rajasthan — avoiding crowded days automatically!</div>
               </div>
               <button className="btn-pri" onClick={() => setStep(2)}>Next →</button>
             </>
@@ -138,7 +138,7 @@ export default function ProfileSetup() {
           {step === 2 && (
             <>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Kya dekhna chahte hain? <span style={{ fontSize: 11, color: 'var(--ink-mute)', fontWeight: 500 }}>(Multiple select)</span></div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>What do you want to experience? <span style={{ fontSize: 11, color: 'var(--ink-mute)', fontWeight: 500 }}>(Select all that apply)</span></div>
               </div>
               <div className="grid-2">
                 {INTERESTS.map(item => (
@@ -168,7 +168,7 @@ export default function ProfileSetup() {
           {/* Step 3 — Travel Style */}
           {step === 3 && (
             <>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Aap kaise travel karte hain?</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>How do you travel?</div>
               {TRAVEL_STYLES.map(s => (
                 <div key={s.label} onClick={() => setForm(f => ({ ...f, travelStyle: s.label }))} style={{
                   background: form.travelStyle === s.label ? 'linear-gradient(135deg,var(--primary-ghost),var(--soft))' : 'var(--surface)',
@@ -187,7 +187,7 @@ export default function ProfileSetup() {
               <div className="ai-box">
                 <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>🎁 500 Welcome Points!</div>
                 <div className="text-xs" style={{ color: 'var(--ink-soft)', lineHeight: 1.5, marginTop: 3 }}>
-                  Profile complete karne ke baad aapko 500 reward points milenge. Rajasthan Gold tier ke liye 5,000 points chahiye.
+                  Complete your profile to earn 500 reward points. Reach Rajasthan Gold tier with 5,000 points.
                 </div>
               </div>
 

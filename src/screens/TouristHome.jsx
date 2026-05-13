@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApp, destinations, packages } from '../context/AppContext'
 import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
+import LanguageSelector from '../components/LanguageSelector'
 
 export default function TouristHome() {
   const navigate = useNavigate()
@@ -21,14 +22,11 @@ export default function TouristHome() {
               <div style={{ fontSize: 10.5, opacity: 0.85, marginTop: 2 }}>📍 Jaipur · Heritage Explorer</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <button onClick={() => navigate('/sos')} style={{ background: '#EF4444', border: 'none', width: 36, height: 36, borderRadius: '50%', color: '#fff', fontSize: 13, fontWeight: 900, cursor: 'pointer', boxShadow: '0 2px 8px rgba(239,68,68,0.5)', animation: 'fabPulse 3s ease-in-out infinite' }}>
+              <LanguageSelector light />
+              <button onClick={() => navigate('/sos')} style={{ background: '#EF4444', border: 'none', width: 34, height: 34, borderRadius: '50%', color: '#fff', fontSize: 11, fontWeight: 900, cursor: 'pointer', boxShadow: '0 2px 8px rgba(239,68,68,0.5)', animation: 'fabPulse 3s ease-in-out infinite', flexShrink: 0 }}>
                 SOS
               </button>
-              <button style={{ position: 'relative', background: 'rgba(255,255,255,0.2)', border: 'none', width: 36, height: 36, borderRadius: '50%', color: '#fff', fontSize: 16, cursor: 'pointer' }}>
-                🔔
-                <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, background: '#10B981', borderRadius: '50%', border: '1.5px solid var(--primary)' }} />
-              </button>
-              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg,var(--accent),#fff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: 'var(--primary-darker)', cursor: 'pointer' }} onClick={() => navigate('/profile')}>
+              <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'linear-gradient(135deg,var(--accent),#fff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: 'var(--primary-darker)', cursor: 'pointer', flexShrink: 0 }} onClick={() => navigate('/profile')}>
                 {user?.initials || 'VS'}
               </div>
             </div>

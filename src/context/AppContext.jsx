@@ -72,10 +72,13 @@ export function AppProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [cart, setCart] = useState(null)
   const [toast, setToast] = useState(null)
+  const [appLanguage, setAppLanguage] = useState('English')
 
   const login = (userData) => {
-    setUser(userData || { name: 'Vikram Singh', initials: 'VS', mobile: '+91 98290•••345', tier: 'Gold', trips: 4, points: 2840 })
+    const u = userData || { name: 'Vikram Singh', initials: 'VS', mobile: '+91 98290•••345', tier: 'Gold', trips: 4, points: 2840 }
+    setUser(u)
     setIsLoggedIn(true)
+    if (u.language) setAppLanguage(u.language)
   }
 
   const logout = () => {
@@ -89,7 +92,7 @@ export function AppProvider({ children }) {
   }
 
   return (
-    <AppContext.Provider value={{ theme, setTheme, user, isLoggedIn, login, logout, cart, setCart, toast, showToast, destinations, packages, grievances }}>
+    <AppContext.Provider value={{ theme, setTheme, user, isLoggedIn, login, logout, cart, setCart, toast, showToast, destinations, packages, grievances, appLanguage, setAppLanguage }}>
       <div data-theme={theme}>
         {children}
         {toast && <div className="toast">{toast}</div>}
