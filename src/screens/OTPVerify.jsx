@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import StatusBar from '../components/StatusBar'
 import AppBar from '../components/AppBar'
 
 export default function OTPVerify() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { login } = useApp()
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [timer, setTimer] = useState(30)
   const [verified, setVerified] = useState(false)
+
+  const isAiRedirect = location.state?.aiRedirect === true
 
   useEffect(() => {
     if (timer > 0) {
@@ -27,9 +30,14 @@ export default function OTPVerify() {
   }
 
   const handleVerify = () => {
+    login()
     setVerified(true)
     setTimeout(() => {
-      navigate('/profile-setup')
+      if (isAiRedirect) {
+        navigate('/ai-chat', { replace: true })
+      } else {
+        navigate('/profile-setup', { replace: true })
+      }
     }, 1200)
   }
 
@@ -49,7 +57,7 @@ export default function OTPVerify() {
             {verified ? (
               <>
                 <div style={{ fontSize: 16, fontWeight: 800, color: '#10B981' }}>✓ Verified!</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 4 }}>Setting up your profile...</div>
+                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 4 }}>{isAiRedirect ? '🤖 Starting Padharo AI for you...' : 'Setting up your profile...'}</div>
               </>
             ) : (
               <>

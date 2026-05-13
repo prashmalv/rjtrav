@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import StatusBar from '../components/StatusBar'
 
 const COUNTRY_CODES = [
@@ -17,6 +17,8 @@ const COUNTRY_CODES = [
 
 export default function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const aiRedirectState = location.state?.aiRedirect ? { aiRedirect: true, initialMsg: location.state.initialMsg } : {}
   const [tab, setTab] = useState('mobile')
   const [mobile, setMobile] = useState('')
   const [email, setEmail] = useState('')
@@ -107,7 +109,7 @@ export default function Login() {
                   </>
                 )}
               </div>
-              <button className="btn-pri" style={{ opacity: mobileValid ? 1 : 0.6 }} onClick={() => navigate('/otp')}>
+              <button className="btn-pri" style={{ opacity: mobileValid ? 1 : 0.6 }} onClick={() => navigate('/otp', { state: aiRedirectState })}>
                 Send OTP via SMS →
               </button>
             </>
@@ -130,7 +132,7 @@ export default function Login() {
                   {emailValid && <span style={{ fontSize: 14, color: '#10B981' }}>✓</span>}
                 </div>
               </div>
-              <button className="btn-pri" style={{ opacity: emailValid ? 1 : 0.6 }} onClick={() => navigate('/otp')}>
+              <button className="btn-pri" style={{ opacity: emailValid ? 1 : 0.6 }} onClick={() => navigate('/otp', { state: aiRedirectState })}>
                 Send OTP via Email →
               </button>
             </>

@@ -23,13 +23,6 @@ const CITY_GRID = [
   { name: 'Pushkar', tagline: 'Sacred Land of Brahma', emoji: '🕍', bg: '#F5F3FF', color: '#7C3AED', img: 'https://images.unsplash.com/photo-1519922639192-e73293ca430e?auto=format&fit=crop&w=600&q=82', dest: null },
 ]
 
-const QUICK_CHIPS = [
-  { label: '🗺 Plan My Trip', query: 'Help me plan a trip to Rajasthan based on my interests' },
-  { label: '🏰 Top Forts', query: 'What are the top heritage forts to visit in Rajasthan?' },
-  { label: '📢 File Complaint', query: 'I want to file a grievance or complaint about a tourism issue' },
-  { label: '📦 Book Package', query: 'Show me tour packages available for Rajasthan' },
-  { label: '🤝 Local Guide', query: 'How do I find a certified local guide in Rajasthan?' },
-]
 
 export default function VisitorHome() {
   const navigate = useNavigate()
@@ -55,8 +48,8 @@ export default function VisitorHome() {
 
   const handleAsk = (q) => {
     const query = (q || aiInput).trim()
-    if (!query) { inputRef.current?.focus(); return }
-    navigate('/ai-chat', { state: { initialMsg: query } })
+    // Guests go to login first; logged-in users go straight to chat
+    navigate('/login', { state: { aiRedirect: true, initialMsg: query || undefined } })
   }
 
   return (
@@ -130,41 +123,46 @@ export default function VisitorHome() {
         <div className="content" style={{ paddingTop: 12 }}>
 
           {/* ── AI CHAT BAR ── */}
-          <div style={{ background: 'linear-gradient(135deg, #7C3AED08, #BE185D08)', border: '1.5px solid var(--primary)', borderRadius: 16, padding: '12px 14px', boxShadow: '0 4px 20px rgba(124,58,237,0.1)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-              <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, position: 'relative' }}>
+          <div
+            style={{ background: 'linear-gradient(135deg, #7C3AED08, #BE185D08)', border: '1.5px solid var(--primary)', borderRadius: 16, padding: '14px 14px 12px', boxShadow: '0 4px 20px rgba(124,58,237,0.1)', cursor: 'pointer' }}
+            onClick={() => handleAsk()}
+          >
+            {/* Bot header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0, position: 'relative' }}>
                 🤖
-                <span style={{ position: 'absolute', bottom: 0, right: 0, width: 10, height: 10, background: '#10B981', border: '2px solid #fff', borderRadius: '50%' }} />
+                <span style={{ position: 'absolute', bottom: 0, right: 0, width: 11, height: 11, background: '#10B981', border: '2px solid #fff', borderRadius: '50%' }} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--primary-dark)' }}>Padharo AI · Your Rajasthan Guide</div>
-                <div style={{ fontSize: 10, color: 'var(--ink-mute)' }}>Plan trips · Get info · File complaints · Book packages</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--primary-dark)' }}>Padharo AI — आपका राजस्थान गाइड</div>
+                <div style={{ fontSize: 10, color: 'var(--ink-mute)' }}>Multilingual · Personalised · Available 24×7</div>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+
+            {/* Warm invite message */}
+            <div style={{ background: '#fff', border: '1px solid var(--primary-ghost)', borderRadius: 12, padding: '10px 12px', marginBottom: 10 }}>
+              <div style={{ fontSize: 12, color: 'var(--ink)', lineHeight: 1.6 }}>
+                🙏 <strong>Padharo</strong> — Ask me anything about Rajasthan!<br />
+                <span style={{ color: 'var(--ink-soft)', fontSize: 11 }}>Trip planning · Heritage forts · Food · Wildlife safaris · Grievances · Local tips — all in one place, in your language.</span>
+              </div>
+            </div>
+
+            {/* Input row */}
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }} onClick={e => e.stopPropagation()}>
               <input
                 ref={inputRef}
                 value={aiInput}
                 onChange={e => setAiInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAsk()}
-                placeholder="Ask anything — itinerary, forts, food, complaint..."
-                style={{ flex: 1, border: '1px solid var(--border)', borderRadius: 10, padding: '9px 12px', fontSize: 12.5, color: 'var(--ink)', background: '#fff', outline: 'none', fontWeight: 500 }}
+                onFocus={() => handleAsk()}
+                placeholder="Tap to start your personalised journey..."
+                readOnly
+                style={{ flex: 1, border: '1px solid var(--primary)', borderRadius: 10, padding: '9px 12px', fontSize: 12, color: 'var(--ink-soft)', background: 'var(--soft)', outline: 'none', fontWeight: 500, cursor: 'pointer' }}
               />
               <button
                 onClick={() => handleAsk()}
-                style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--grad-hero)', border: 'none', color: '#fff', fontSize: 16, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }}
+                style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--grad-hero)', border: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }}
               >→</button>
-            </div>
-            <div style={{ display: 'flex', gap: 6, marginTop: 9, flexWrap: 'wrap' }}>
-              {QUICK_CHIPS.map(c => (
-                <button
-                  key={c.label}
-                  onClick={() => handleAsk(c.query)}
-                  style={{ background: 'var(--soft)', border: '1px solid var(--border)', borderRadius: 20, padding: '5px 10px', fontSize: 10.5, fontWeight: 700, color: 'var(--ink-soft)', cursor: 'pointer', whiteSpace: 'nowrap' }}
-                >
-                  {c.label}
-                </button>
-              ))}
             </div>
           </div>
 
