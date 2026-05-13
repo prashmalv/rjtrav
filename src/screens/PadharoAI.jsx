@@ -79,23 +79,93 @@ function localFallback(msg, profile) {
   return `I'd love to help you explore Rajasthan! 🏰\n\nI can assist with:\n• **Itinerary planning** — personalised for ${style} travellers\n• **Heritage sites** — forts, palaces, havelis with entry details\n• **Wildlife** — Ranthambore safari bookings & tips\n• **Local food** — must-try dishes and best restaurants\n• **Shopping** — best markets and what to buy\n\nWhat would you like to explore?`
 }
 
-function RenderText({ text }) {
+function inline(text) {
+  const parts = text.split(/\*\*([^*]+)\*\*/g)
+  return parts.map((p, i) => i % 2 === 1 ? <strong key={i}>{p}</strong> : <span key={i}>{p}</span>)
+}
+
+function TableBlock({ lines }) {
+  const dataLines = lines.filter(l => !/^\|[\s\-:|]+\|/.test(l))
+  if (!dataLines.length) return null
+  const parse = l => l.split('|').slice(1, -1).map(c => c.trim())
+  const [head, ...rows] = dataLines
+  const headers = parse(head)
   return (
-    <div style={{ lineHeight: 1.6, fontSize: 13 }}>
-      {text.split('\n').map((line, li) => {
-        const parts = line.split(/\*\*([^*]+)\*\*/g)
-        return (
-          <div key={li} style={{ minHeight: line.trim() === '' ? 6 : undefined }}>
-            {parts.map((part, pi) =>
-              pi % 2 === 1
-                ? <strong key={pi}>{part}</strong>
-                : <span key={pi}>{part}</span>
-            )}
-          </div>
-        )
-      })}
+    <div style={{ overflowX: 'auto', margin: '8px 0', borderRadius: 10, border: '1px solid var(--border)' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
+        <thead>
+          <tr style={{ background: 'var(--primary-ghost)' }}>
+            {headers.map((h, i) => (
+              <th key={i} style={{ padding: '7px 10px', textAlign: 'left', fontWeight: 800, color: 'var(--primary-dark)', borderBottom: '1.5px solid var(--border)', whiteSpace: 'nowrap' }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, ri) => (
+            <tr key={ri} style={{ background: ri % 2 === 0 ? '#fff' : 'var(--soft)', borderBottom: '1px solid var(--soft)' }}>
+              {parse(row).map((cell, ci) => (
+                <td key={ci} style={{ padding: '6px 10px', color: 'var(--ink-soft)', verticalAlign: 'top' }}>{inline(cell)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
+}
+
+function RenderText({ text }) {
+  const lines = text.split('\n')
+  const elements = []
+  let tableLines = []
+
+  const flushTable = (key) => {
+    if (tableLines.length) {
+      elements.push(<TableBlock key={`tbl-${key}`} lines={tableLines} />)
+      tableLines = []
+    }
+  }
+
+  lines.forEach((line, li) => {
+    if (/^\|/.test(line.trim())) {
+      tableLines.push(line)
+      return
+    }
+    flushTable(li)
+
+    if (/^### /.test(line)) {
+      elements.push(<div key={li} style={{ fontSize: 12, fontWeight: 800, color: 'var(--primary-dark)', marginTop: 10, marginBottom: 2 }}>{inline(line.slice(4))}</div>)
+    } else if (/^## /.test(line)) {
+      elements.push(<div key={li} style={{ fontSize: 13.5, fontWeight: 900, color: 'var(--ink)', marginTop: 12, marginBottom: 3, borderBottom: '1.5px solid var(--soft)', paddingBottom: 3 }}>{inline(line.slice(3))}</div>)
+    } else if (/^# /.test(line)) {
+      elements.push(<div key={li} style={{ fontSize: 15, fontWeight: 900, color: 'var(--primary)', marginTop: 14, marginBottom: 4 }}>{inline(line.slice(2))}</div>)
+    } else if (/^[•\-\*] /.test(line)) {
+      elements.push(
+        <div key={li} style={{ display: 'flex', gap: 8, marginTop: 4, alignItems: 'flex-start' }}>
+          <span style={{ color: 'var(--primary)', fontSize: 9, marginTop: 4, flexShrink: 0 }}>●</span>
+          <span style={{ flex: 1 }}>{inline(line.slice(2))}</span>
+        </div>
+      )
+    } else if (/^\d+\. /.test(line)) {
+      const dot = line.indexOf('. ')
+      const num = line.slice(0, dot)
+      const rest = line.slice(dot + 2)
+      elements.push(
+        <div key={li} style={{ display: 'flex', gap: 8, marginTop: 4, alignItems: 'flex-start' }}>
+          <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: 11, flexShrink: 0, minWidth: 16 }}>{num}.</span>
+          <span style={{ flex: 1 }}>{inline(rest)}</span>
+        </div>
+      )
+    } else if (line.trim() === '') {
+      elements.push(<div key={li} style={{ height: 6 }} />)
+    } else {
+      elements.push(<div key={li}>{inline(line)}</div>)
+    }
+  })
+
+  flushTable('end')
+
+  return <div style={{ lineHeight: 1.65, fontSize: 13 }}>{elements}</div>
 }
 
 function ChipSelect({ options, selected, onToggle, multi = false }) {

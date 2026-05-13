@@ -123,46 +123,58 @@ export default function VisitorHome() {
         <div className="content" style={{ paddingTop: 12 }}>
 
           {/* ── AI CHAT BAR ── */}
-          <div
-            style={{ background: 'linear-gradient(135deg, #7C3AED08, #BE185D08)', border: '1.5px solid var(--primary)', borderRadius: 16, padding: '14px 14px 12px', boxShadow: '0 4px 20px rgba(124,58,237,0.1)', cursor: 'pointer' }}
-            onClick={() => handleAsk()}
-          >
+          <div style={{ background: 'linear-gradient(135deg, #7C3AED0A, #BE185D0A)', border: '1.5px solid var(--primary)', borderRadius: 18, overflow: 'hidden', boxShadow: '0 4px 24px rgba(124,58,237,0.12)' }}>
+
             {/* Bot header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-              <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0, position: 'relative' }}>
+            <div style={{ padding: '14px 14px 10px', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'var(--grad-hero)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0, position: 'relative' }}>
                 🤖
-                <span style={{ position: 'absolute', bottom: 0, right: 0, width: 11, height: 11, background: '#10B981', border: '2px solid #fff', borderRadius: '50%' }} />
+                <span style={{ position: 'absolute', bottom: 1, right: 1, width: 11, height: 11, background: '#10B981', border: '2px solid #fff', borderRadius: '50%' }} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--primary-dark)' }}>Padharo AI — आपका राजस्थान गाइड</div>
+                <div style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--primary-dark)' }}>Padharo AI — आपका राजस्थान गाइड</div>
                 <div style={{ fontSize: 10, color: 'var(--ink-mute)' }}>Multilingual · Personalised · Available 24×7</div>
               </div>
             </div>
 
-            {/* Warm invite message */}
-            <div style={{ background: '#fff', border: '1px solid var(--primary-ghost)', borderRadius: 12, padding: '10px 12px', marginBottom: 10 }}>
-              <div style={{ fontSize: 12, color: 'var(--ink)', lineHeight: 1.6 }}>
-                🙏 <strong>Padharo</strong> — Ask me anything about Rajasthan!<br />
-                <span style={{ color: 'var(--ink-soft)', fontSize: 11 }}>Trip planning · Heritage forts · Food · Wildlife safaris · Grievances · Local tips — all in one place, in your language.</span>
+            {/* Main invite */}
+            <div style={{ margin: '0 14px', background: '#fff', border: '1px solid var(--primary-ghost)', borderRadius: 12, padding: '11px 13px' }}>
+              <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--primary-dark)', marginBottom: 4 }}>
+                🙏 पधारो म्हारे देश
+              </div>
+              <div style={{ fontSize: 11.5, color: 'var(--ink-soft)', lineHeight: 1.65 }}>
+                Ask me anything about Rajasthan — trip plans, best forts, local food, wildlife safaris, travel tips, weather advisories — all in one place, in your language.
               </div>
             </div>
 
-            {/* Input row */}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }} onClick={e => e.stopPropagation()}>
-              <input
-                ref={inputRef}
-                value={aiInput}
-                onChange={e => setAiInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAsk()}
-                onFocus={() => handleAsk()}
-                placeholder="Tap to start your personalised journey..."
-                readOnly
-                style={{ flex: 1, border: '1px solid var(--primary)', borderRadius: 10, padding: '9px 12px', fontSize: 12, color: 'var(--ink-soft)', background: 'var(--soft)', outline: 'none', fontWeight: 500, cursor: 'pointer' }}
-              />
+            {/* Sign-in benefits */}
+            <div style={{ margin: '10px 14px 0', background: 'linear-gradient(135deg,#FDF4FF,#FFF7ED)', border: '1px solid #E9D5FF', borderRadius: 12, padding: '10px 12px' }}>
+              <div style={{ fontSize: 10.5, fontWeight: 800, color: '#6D28D9', marginBottom: 7 }}>📲 Sign in to unlock more:</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {[
+                  ['🗺', 'Personalised itinerary based on your travel style, city & interests'],
+                  ['🌡️', 'Health & weather advisories — avoid heat-risk zones in real-time'],
+                  ['🆘', 'SOS Emergency Button — instant help at any heritage site'],
+                  ['📢', 'Grievance filing → goes directly to Govt. tourism officers'],
+                ].map(([ico, txt]) => (
+                  <div key={txt} style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
+                    <span style={{ fontSize: 13, flexShrink: 0 }}>{ico}</span>
+                    <span style={{ fontSize: 10.5, color: '#4C1D95', lineHeight: 1.5 }}>{txt}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA button */}
+            <div style={{ padding: '12px 14px 14px' }}>
               <button
                 onClick={() => handleAsk()}
-                style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--grad-hero)', border: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }}
-              >→</button>
+                style={{ width: '100%', background: 'var(--grad-hero)', border: 'none', borderRadius: 14, padding: '13px 0', color: '#fff', fontSize: 14, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 3px 12px rgba(124,58,237,0.4)', letterSpacing: 0.2 }}
+              >
+                <span>🚀</span>
+                <span>Start My Personalised Journey</span>
+                <span style={{ fontSize: 16 }}>→</span>
+              </button>
             </div>
           </div>
 
