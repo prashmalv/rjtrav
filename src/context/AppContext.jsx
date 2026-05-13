@@ -2,16 +2,15 @@ import { createContext, useContext, useState } from 'react'
 
 const AppContext = createContext(null)
 
-const Q = '?auto=format&fit=crop&w=600&q=82'
 const imgs = {
-  hawaMahal:   `https://images.unsplash.com/photo-1599661046289-e31897846e41${Q}`,
-  amberFort:   `https://images.unsplash.com/photo-1524492412937-b28074a5d7da${Q}`,
-  mehrangarh:  `https://images.unsplash.com/photo-1573473681523-91cf7a5e83b6${Q}`,
-  udaipur:     `https://images.unsplash.com/photo-1602216056096-3b40cc0c9944${Q}`,
-  jaisalmer:   `https://images.unsplash.com/photo-1477587458883-47145ed94245${Q}`,
-  tiger:       `https://images.unsplash.com/photo-1564760055775-d63b17a55c44${Q}`,
-  dunes:       `https://images.unsplash.com/photo-1528360983277-13d401cdc186${Q}`,
-  lakePichola: `https://images.unsplash.com/photo-1548013146-72479768bada${Q}`,
+  hawaMahal:   'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg',
+  amberFort:   'https://media-cdn.tripadvisor.com/media/photo-s/17/d3/a8/57/images-30-largejpg.jpg',
+  mehrangarh:  'https://s7ap1.scene7.com/is/image/incredibleindia/mehrangarh-fort-jodhpur-rajasthan-hero?qlt=82&ts=1726660826646',
+  udaipur:     'https://plus.unsplash.com/premium_photo-1697729789803-48b0c82365ff?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2l0eSUyMHBhbGFjZSUyMHVkYWlwdXIlMjBpbmRpYXxlbnwwfHwwfHx8MA%3D%3D',
+  jaisalmer:   'https://t3.ftcdn.net/jpg/18/64/90/28/360_F_1864902844_6YAGMiY2NH5DrVTtDMk2BnMUL6CyOJoW.jpg',
+  tiger:       'https://thumbs.dreamstime.com/b/ranthambore-national-park-rajasthan-india-august-wild-royal-bengal-tiger-open-monsoon-season-wildlife-lovers-229783456.jpg',
+  dunes:       'https://images.unsplash.com/photo-1519922639192-e73293ca430e?auto=format&fit=crop&w=600&q=82',
+  lakePichola: 'https://www.treebo.com/blog/wp-content/uploads/2018/08/Lake-Pichola-in-Udaipur.jpg',
 }
 
 export const destinations = [

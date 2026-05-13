@@ -3,8 +3,8 @@ import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
 import { destinations } from '../context/AppContext'
 
-const HAWA_MAHAL = 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=82'
-const AMBER_FORT = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=82'
+const HAWA_MAHAL = 'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg'
+const AMBER_FORT = 'https://media-cdn.tripadvisor.com/media/photo-s/17/d3/a8/57/images-30-largejpg.jpg'
 
 export default function VisitorHome() {
   const navigate = useNavigate()
