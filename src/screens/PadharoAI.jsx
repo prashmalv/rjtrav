@@ -222,9 +222,9 @@ export default function PadharoAI() {
   const getGreeting = (profile) => {
     const p = profile || guestProfileRef.current || user
     if (p?.name) {
-      return `Hello ${p.name}! 👋 I'm Padharo AI, your personal Rajasthan guide.${p.interests?.length ? ` I see you're into **${p.interests.slice(0, 2).join('** & **')}** — I'll tailor every suggestion for you! 🎯` : ' How can I help plan your perfect trip?'}`
+      return `Hello ${p.name}! 👋 I'm Rajwada AI, your personal Rajasthan guide.${p.interests?.length ? ` I see you're into **${p.interests.slice(0, 2).join('** & **')}** — I'll tailor every suggestion for you! 🎯` : ' How can I help plan your perfect trip?'}`
     }
-    return "Namaste! 👋 I'm Padharo AI, your personal Rajasthan travel companion. Ask me anything — itineraries, forts, food, wildlife, or local tips."
+    return "Namaste! 👋 I'm Rajwada AI, your personal Rajasthan travel companion. Ask me anything — itineraries, forts, food, wildlife, or local tips."
   }
 
   // Handle initial message passed from home page quick chips
@@ -339,7 +339,7 @@ export default function PadharoAI() {
                 <span style={{ position: 'absolute', bottom: 0, right: 0, width: 13, height: 13, background: '#10B981', border: '2px solid var(--primary)', borderRadius: '50%' }} />
               </div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 800 }}>Padharo AI</div>
+                <div style={{ fontSize: 16, fontWeight: 800 }}>Rajwada AI</div>
                 <div style={{ fontSize: 10.5, opacity: 0.9, marginTop: 1 }}>Tell me about yourself — I'll personalise everything ✨</div>
               </div>
             </div>
@@ -475,7 +475,7 @@ export default function PadharoAI() {
           <span style={{ position: 'absolute', bottom: -1, right: -1, width: 11, height: 11, background: '#10B981', border: '2px solid var(--primary)', borderRadius: '50%' }} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 800 }}>Padharo AI</div>
+          <div style={{ fontSize: 13.5, fontWeight: 800 }}>Rajwada AI</div>
           <div style={{ fontSize: 9.5, opacity: 0.85, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {typing ? '⚡ Thinking...' : activeProfile?.name ? `Personalised for ${activeProfile.name} · ${appLanguage}` : `● Online · ${appLanguage}`}
           </div>

@@ -436,7 +436,7 @@ a{text-decoration:none;color:inherit}
   background:var(--surface);border:1px solid var(--border);
   border-radius:14px;overflow:hidden;box-shadow:var(--shadow-1);
 }
-.booking-card-img{height:120px;position:relative;overflow:hidden}
+.booking-card-img{height:175px;position:relative;overflow:hidden}
 .booking-card-img img{width:100%;height:100%;object-fit:cover}
 .booking-card-body{padding:12px}
 

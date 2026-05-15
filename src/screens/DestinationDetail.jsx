@@ -116,7 +116,7 @@ export default function DestinationDetail() {
                 <div style={{ fontSize: 11, opacity: 0.9, marginBottom: 10, lineHeight: 1.5 }}>
                   ✓ Book tickets & tours instantly<br />
                   ✓ Save to itinerary & trips<br />
-                  ✓ Chat with Padharo AI guide<br />
+                  ✓ Chat with Rajwada AI guide<br />
                   ✓ File grievances if needed
                 </div>
                 <button style={{ background: '#F59E0B', color: '#3D1F00', padding: '9px 0', borderRadius: 8, fontWeight: 800, fontSize: 12, width: '100%' }} onClick={() => navigate('/signup')}>

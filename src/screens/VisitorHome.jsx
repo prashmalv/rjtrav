@@ -132,7 +132,7 @@ export default function VisitorHome() {
                 <span style={{ position: 'absolute', bottom: 1, right: 1, width: 11, height: 11, background: '#10B981', border: '2px solid #fff', borderRadius: '50%' }} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--primary-dark)' }}>Padharo AI — आपका राजस्थान गाइड</div>
+                <div style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--primary-dark)' }}>Rajwada AI — आपका राजस्थान गाइड</div>
                 <div style={{ fontSize: 10, color: 'var(--ink-mute)' }}>Multilingual · Personalised · Available 24×7</div>
               </div>
             </div>

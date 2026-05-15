@@ -157,7 +157,7 @@ export default function FileGrievance() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
                   <div style={{ fontSize: 28 }}>🤖</div>
                   <div>
-                    <div className="bold" style={{ fontSize: 14, color: 'var(--ink)' }}>Padharo AI reviewed</div>
+                    <div className="bold" style={{ fontSize: 14, color: 'var(--ink)' }}>Rajwada AI reviewed</div>
                     <div style={{ fontSize: 11, color: 'var(--ink-mute)' }}>Processed in 2.4 seconds</div>
                   </div>
                 </div>

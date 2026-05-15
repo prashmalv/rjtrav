@@ -4,13 +4,13 @@ const AppContext = createContext(null)
 
 const imgs = {
   hawaMahal:   'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg',
-  amberFort:   'https://media-cdn.tripadvisor.com/media/photo-s/17/d3/a8/57/images-30-largejpg.jpg',
+  amberFort:   'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Amer_Fort_Jaipur_Rajasthan_India.jpg/1200px-Amer_Fort_Jaipur_Rajasthan_India.jpg',
   mehrangarh:  'https://s7ap1.scene7.com/is/image/incredibleindia/mehrangarh-fort-jodhpur-rajasthan-hero?qlt=82&ts=1726660826646',
   udaipur:     'https://plus.unsplash.com/premium_photo-1697729789803-48b0c82365ff?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2l0eSUyMHBhbGFjZSUyMHVkYWlwdXIlMjBpbmRpYXxlbnwwfHwwfHx8MA%3D%3D',
   jaisalmer:   'https://t3.ftcdn.net/jpg/18/64/90/28/360_F_1864902844_6YAGMiY2NH5DrVTtDMk2BnMUL6CyOJoW.jpg',
   tiger:       'https://thumbs.dreamstime.com/b/ranthambore-national-park-rajasthan-india-august-wild-royal-bengal-tiger-open-monsoon-season-wildlife-lovers-229783456.jpg',
   dunes:       'https://images.unsplash.com/photo-1519922639192-e73293ca430e?auto=format&fit=crop&w=600&q=82',
-  lakePichola: 'https://www.treebo.com/blog/wp-content/uploads/2018/08/Lake-Pichola-in-Udaipur.jpg',
+  lakePichola: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Lake_Pichola_with_City_Palace_and_Lake_Palace.jpg/1200px-Lake_Pichola_with_City_Palace_and_Lake_Palace.jpg',
 }
 
 export const destinations = [

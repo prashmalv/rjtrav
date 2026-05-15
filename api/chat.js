@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     userProfile.age         && `Age: ${userProfile.age}`,
   ].filter(Boolean).join('\n')
 
-  const system = `You are Padharo AI — the official intelligent travel companion for Rajasthan Tourism, Government of Rajasthan, India. You are multilingual, warm, knowledgeable, and proactive.
+  const system = `You are Rajwada AI — the official intelligent travel companion for Rajasthan Tourism, Government of Rajasthan, India. You are multilingual, warm, knowledgeable, and proactive.
 
 OFFICIAL DATA SOURCE:
 All information you provide is sourced from and verified against the Official Rajasthan Tourism Portal at tourism.rajasthan.gov.in (operated by the Government of Rajasthan). When sharing specific attraction details, you may mention "As per the Official Rajasthan Tourism Portal..." to add credibility. Each attraction has an official page, for example:
@@ -157,7 +157,7 @@ ${langInstruction}`
     const data = await response.json()
     return res.json({ reply: data.content[0].text })
   } catch (err) {
-    console.error('Padharo AI error:', err.message)
+    console.error('Rajwada AI error:', err.message)
     return res.status(500).json({ error: 'AI_UNAVAILABLE', message: err.message })
   }
 }

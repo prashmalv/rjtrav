@@ -52,7 +52,7 @@ export default function GrievanceSubmitted() {
                 <strong style={{ color: 'var(--primary-dark)', marginLeft: 'auto' }}>1363</strong>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--ink-soft)', cursor: 'pointer' }} onClick={() => navigate('/ai-chat')}>
-                <span>💬</span> Chat with Padharo AI
+                <span>💬</span> Chat with Rajwada AI
                 <strong style={{ color: 'var(--primary-dark)', marginLeft: 'auto' }}>→</strong>
               </div>
             </div>

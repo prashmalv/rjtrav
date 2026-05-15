@@ -25,7 +25,7 @@ export default function SignUp() {
           <div className="surface" style={{ padding: 14 }}>
             <div className="bold" style={{ fontSize: 13, marginBottom: 10, color: 'var(--primary-dark)' }}>✨ What you'll get</div>
             {[
-              ['🤖', 'Padharo AI', 'Personalised travel guide in 6 languages'],
+              ['🤖', 'Rajwada AI', 'Personalised travel guide in 6 languages'],
               ['🗺', 'AI Itinerary Builder', 'Smart trips with crowd intelligence'],
               ['🎫', 'Easy Booking', 'Forts, packages & experiences in 2 taps'],
               ['📢', 'Grievance System', '24-hour resolution guarantee'],

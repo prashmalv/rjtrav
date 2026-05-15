@@ -57,7 +57,7 @@ export default function OTPVerify() {
             {verified ? (
               <>
                 <div style={{ fontSize: 16, fontWeight: 800, color: '#10B981' }}>✓ Verified!</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 4 }}>{isAiRedirect ? '🤖 Starting Padharo AI for you...' : 'Setting up your profile...'}</div>
+                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 4 }}>{isAiRedirect ? '🤖 Starting Rajwada AI for you...' : 'Setting up your profile...'}</div>
               </>
             ) : (
               <>

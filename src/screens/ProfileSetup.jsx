@@ -127,7 +127,7 @@ export default function ProfileSetup() {
                 </div>
               </div>
               <div className="ai-box">
-                <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>🤖 Padharo AI learns your preferences</div>
+                <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>🤖 Rajwada AI learns your preferences</div>
                 <div className="text-xs" style={{ color: 'var(--ink-soft)', lineHeight: 1.5, marginTop: 3 }}>Based on your home city's travel patterns, AI will suggest smart routes to Rajasthan — avoiding crowded days automatically!</div>
               </div>
               <button className="btn-pri" onClick={() => setStep(2)}>Next →</button>

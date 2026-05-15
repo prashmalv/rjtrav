@@ -135,7 +135,7 @@ export default function TouristHome() {
 
           {/* AI tip */}
           <div className="ai-box">
-            <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>💡 Padharo AI tip for you</div>
+            <div className="bold" style={{ fontSize: 12, color: 'var(--ink)' }}>💡 Rajwada AI tip for you</div>
             <div className="text-xs" style={{ color: 'var(--ink-soft)', lineHeight: 1.55, marginTop: 4 }}>
               Pre-book Jaisalmer camel safari now — 11 Nov is the Pushkar Camel Fair, prices spike 40%. <span style={{ color: 'var(--primary)', fontWeight: 700, cursor: 'pointer' }} onClick={() => navigate('/packages')}>Tap to book.</span>
             </div>
@@ -146,7 +146,7 @@ export default function TouristHome() {
       </div>
 
       {/* AI FAB */}
-      <div className="chat-fab" onClick={() => navigate('/ai-chat')} title="Chat with Padharo AI">
+      <div className="chat-fab" onClick={() => navigate('/ai-chat')} title="Chat with Rajwada AI">
         💬
         <span className="fab-badge" />
       </div>
