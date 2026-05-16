@@ -28,7 +28,9 @@ export const packages = [
   {
     id: 1, name: 'Royal Rajasthan Trail', cities: 'Jaipur · Udaipur · Jaisalmer',
     days: 7, nights: 6, price: 38499, rating: 4.9, reviews: 892, booked: 1247,
-    img: '🏯', imgUrl: imgs.amberFort, badge: '⭐ Bestseller',
+    img: '🏯',
+    imgUrl: 'https://3.bp.blogspot.com/-gyrh_RuCV2E/U1YDxp9I4EI/AAAAAAAAE-g/E8JjPonHeco/s1600/Hawa-Mahal-Palace-Jaipur-Monuments-Of-India.jpg',
+    badge: '⭐ Bestseller',
     includes: ['4★ Stay', 'Transport', 'Meals', 'Entry'],
     itinerary: [
       { day: 'Day 1', title: 'Arrive Jaipur', desc: 'Hawa Mahal · City Palace · Bazaar' },
@@ -51,11 +53,32 @@ export const packages = [
   {
     id: 3, name: 'Lakes & Palaces', cities: 'Udaipur · Pushkar',
     days: 5, nights: 4, price: 24999, rating: 4.9, reviews: 380, booked: 415,
-    img: '⛵', imgUrl: imgs.lakePichola, badge: '⛵ Romantic',
+    img: '⛵',
+    imgUrl: 'https://plus.unsplash.com/premium_photo-1697729789803-48b0c82365ff?fm=jpg&q=60&w=800&auto=format&fit=crop',
+    badge: '⛵ Romantic',
     includes: ['Heritage Hotel', 'Boat Ride', 'Meals', 'Guide'],
     itinerary: [
       { day: 'Day 1-3', title: 'Udaipur', desc: 'City Palace · Lake Pichola · Saheliyon' },
       { day: 'Day 4-5', title: 'Pushkar', desc: 'Brahma Temple · Pushkar Lake · Camel Fair' },
+    ]
+  },
+  {
+    id: 4, name: 'Palace on Wheels', cities: 'Jaipur · Ranthambore · Udaipur · Jodhpur · Jaisalmer · Bharatpur · Agra',
+    days: 8, nights: 7, price: 187500, rating: 5.0, reviews: 213, booked: 389,
+    img: '🚂',
+    imgUrl: 'https://t3.ftcdn.net/jpg/18/64/90/28/360_F_1864902844_6YAGMiY2NH5DrVTtDMk2BnMUL6CyOJoW.jpg',
+    badge: '👑 Luxury Train',
+    includes: ['Luxury Cabin', 'All Meals', 'Entry Fees', 'All Transfers'],
+    bookingUrl: 'https://rtdc.tourism.rajasthan.gov.in/Client/PackageTour.aspx',
+    itinerary: [
+      { day: 'Day 1', title: 'Delhi Safdarjung Station', desc: 'Depart 4:45 PM · Welcome aboard' },
+      { day: 'Day 2', title: 'Jaipur', desc: 'Amber Fort · City Palace · Hawa Mahal · Elephant ride' },
+      { day: 'Day 3', title: 'Ranthambore', desc: 'Tiger safari · Fort ruins · Jungle walk' },
+      { day: 'Day 4', title: 'Chittorgarh · Udaipur', desc: 'Chittorgarh Fort · Lake Pichola · City Palace' },
+      { day: 'Day 5', title: 'Jodhpur', desc: 'Mehrangarh Fort · Blue City · Umaid Bhawan' },
+      { day: 'Day 6', title: 'Jaisalmer', desc: 'Golden Fort · Sam Sand Dunes · Camel safari' },
+      { day: 'Day 7', title: 'Bharatpur · Agra', desc: 'Keoladeo Bird Sanctuary · Taj Mahal' },
+      { day: 'Day 8', title: 'Delhi Safdarjung', desc: 'Morning arrival · Tour ends' },
     ]
   },
 ]

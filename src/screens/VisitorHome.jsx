@@ -31,6 +31,7 @@ export default function VisitorHome() {
   const [heroIdx, setHeroIdx] = useState(0)
   const [aiInput, setAiInput] = useState('')
   const [transitioning, setTransitioning] = useState(false)
+  const [cityWeather, setCityWeather] = useState({})
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -42,6 +43,17 @@ export default function VisitorHome() {
       }, 300)
     }, 3800)
     return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/weather')
+      .then(r => r.json())
+      .then(d => {
+        const map = {}
+        d.cities?.forEach(c => { map[c.name] = c })
+        setCityWeather(map)
+      })
+      .catch(() => {})
   }, [])
 
   const city = HERO_CITIES[heroIdx]
@@ -101,8 +113,17 @@ export default function VisitorHome() {
           <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.1 }}>
             {city.emoji} {city.name}
           </div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.92)', fontWeight: 600, marginTop: 2, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
-            {city.tagline}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.88)', fontWeight: 600, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
+              {city.tagline}
+            </div>
+            {cityWeather[city.name] && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', borderRadius: 8, padding: '3px 8px' }}>
+                <span style={{ fontSize: 13 }}>{cityWeather[city.name].emoji}</span>
+                <span style={{ fontSize: 12, fontWeight: 800, color: '#fff' }}>{cityWeather[city.name].temp}°C</span>
+                <span style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.8)', fontWeight: 600 }}>{cityWeather[city.name].condition}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -219,6 +240,12 @@ export default function VisitorHome() {
                   <div style={{ position: 'absolute', top: 8, right: 8, background: c.color, borderRadius: 6, padding: '2px 6px', fontSize: 8, fontWeight: 800, color: '#fff', zIndex: 2 }}>
                     EXPLORE
                   </div>
+                  {cityWeather[c.name] && (
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(6px)', borderRadius: 6, padding: '2px 6px', fontSize: 9, fontWeight: 700, color: '#fff', zIndex: 2, display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <span>{cityWeather[c.name].emoji}</span>
+                      <span>{cityWeather[c.name].temp}°C</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

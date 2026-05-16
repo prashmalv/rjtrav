@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext'
 import StatusBar from '../components/StatusBar'
 import BottomNav from '../components/BottomNav'
 import LanguageSelector from '../components/LanguageSelector'
+import NearbySearch from '../components/NearbySearch'
 
 const INTEREST_OPTIONS = [
   { ico: '🏰', label: 'Forts & Palaces' },
@@ -14,6 +15,8 @@ const INTEREST_OPTIONS = [
   { ico: '🛍', label: 'Shopping' },
   { ico: '⛵', label: 'Lakes & Nature' },
   { ico: '🧘', label: 'Wellness & Culture' },
+  { ico: '🛕', label: 'Religious Places' },
+  { ico: '🏛', label: 'UNESCO Heritage' },
 ]
 
 const FROM_CITIES = ['Delhi / NCR', 'Mumbai', 'Bengaluru', 'International']
@@ -80,8 +83,27 @@ function localFallback(msg, profile) {
 }
 
 function inline(text) {
-  const parts = text.split(/\*\*([^*]+)\*\*/g)
-  return parts.map((p, i) => i % 2 === 1 ? <strong key={i}>{p}</strong> : <span key={i}>{p}</span>)
+  const regex = /(\*\*[^*]+\*\*|https?:\/\/[^\s\)\]>\"]+)/g
+  const parts = []
+  let last = 0, match
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > last) parts.push({ t: 'text', v: text.slice(last, match.index) })
+    const m = match[0]
+    if (m.startsWith('**')) parts.push({ t: 'bold', v: m.slice(2, -2) })
+    else parts.push({ t: 'link', v: m })
+    last = match.index + m.length
+  }
+  if (last < text.length) parts.push({ t: 'text', v: text.slice(last) })
+  return parts.map((p, i) => {
+    if (p.t === 'bold') return <strong key={i}>{p.v}</strong>
+    if (p.t === 'link') return (
+      <a key={i} href={p.v} target="_blank" rel="noopener noreferrer"
+        style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'underline', wordBreak: 'break-all' }}>
+        {p.v}
+      </a>
+    )
+    return <span key={i}>{p.v}</span>
+  })
 }
 
 function TableBlock({ lines }) {
@@ -212,10 +234,44 @@ export default function PadharoAI() {
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
   const [form, setForm] = useState({ name: '', style: '', interests: [], fromCity: '', days: '' })
+  const [isListening, setIsListening] = useState(false)
   const guestProfileRef = useRef(null)
   const appLanguageRef = useRef(appLanguage)
   const initialMsgFired = useRef(false)
+  const recognitionRef = useRef(null)
   useEffect(() => { appLanguageRef.current = appLanguage }, [appLanguage])
+
+  const VOICE_LANG_MAP = {
+    Hindi: 'hi-IN', German: 'de-DE', French: 'fr-FR',
+    Japanese: 'ja-JP', Spanish: 'es-ES', English: 'en-IN',
+  }
+
+  const toggleVoice = () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SR) {
+      alert('Voice input is not supported in this browser. Try Chrome on Android/desktop.')
+      return
+    }
+    if (isListening) {
+      recognitionRef.current?.stop()
+      setIsListening(false)
+      return
+    }
+    const rec = new SR()
+    rec.lang = VOICE_LANG_MAP[appLanguage] || 'en-IN'
+    rec.interimResults = false
+    rec.maxAlternatives = 1
+    rec.onresult = (e) => {
+      const transcript = e.results[0][0].transcript
+      setInput(prev => (prev ? prev + ' ' : '') + transcript)
+      setIsListening(false)
+    }
+    rec.onerror = () => setIsListening(false)
+    rec.onend = () => setIsListening(false)
+    recognitionRef.current = rec
+    rec.start()
+    setIsListening(true)
+  }
 
   const bottomRef = useRef(null)
 
@@ -224,7 +280,7 @@ export default function PadharoAI() {
     if (p?.name) {
       return `Hello ${p.name}! 👋 I'm Rajwada AI, your personal Rajasthan guide.${p.interests?.length ? ` I see you're into **${p.interests.slice(0, 2).join('** & **')}** — I'll tailor every suggestion for you! 🎯` : ' How can I help plan your perfect trip?'}`
     }
-    return "Namaste! 👋 I'm Rajwada AI, your personal Rajasthan travel companion. Ask me anything — itineraries, forts, food, wildlife, or local tips."
+    return "Khamma Ghani! 🙏 I'm Rajwada AI, your personal Rajasthan travel companion. Ask me anything — itineraries, forts, food, wildlife, or local tips."
   }
 
   // Handle initial message passed from home page quick chips
@@ -546,10 +602,24 @@ export default function PadharoAI() {
         <div ref={bottomRef} style={{ height: 4 }} />
       </div>
 
+      <NearbySearch bottomOffset={72} />
+
       <div className="chat-input-bar">
+        <button
+          onClick={toggleVoice}
+          title={isListening ? 'Stop listening' : 'Speak your question'}
+          style={{
+            width: 36, height: 36, borderRadius: '50%', flexShrink: 0, border: 'none', cursor: 'pointer',
+            background: isListening ? '#EF4444' : 'var(--soft)',
+            color: isListening ? '#fff' : 'var(--ink-mute)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+            animation: isListening ? 'pulse 1s ease-in-out infinite' : 'none',
+            transition: 'background 0.2s',
+          }}
+        >🎤</button>
         <input
           className="chat-input"
-          placeholder={`Ask in ${appLanguage}...`}
+          placeholder={isListening ? '🎤 Listening...' : `Ask in ${appLanguage}...`}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMsg()}

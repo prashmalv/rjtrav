@@ -79,6 +79,39 @@ export default function TouristHome() {
             ))}
           </div>
 
+          {/* Featured Packages */}
+          <div className="sec-head" style={{ marginBottom: 8 }}>
+            <h3>🎫 Book Tour Packages</h3>
+            <span className="more" onClick={() => navigate('/packages')}>View all →</span>
+          </div>
+          <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4, marginBottom: 4 }} className="hide-scrollbar">
+            {packages.map(pkg => (
+              <div
+                key={pkg.id}
+                onClick={() => pkg.bookingUrl ? window.open(pkg.bookingUrl, '_blank') : navigate(`/package/${pkg.id}`)}
+                style={{ flexShrink: 0, width: 158, borderRadius: 12, overflow: 'hidden', cursor: 'pointer', border: '1.5px solid var(--border)', position: 'relative', height: 110, background: 'var(--grad-hero)' }}
+              >
+                <img src={pkg.imgUrl} alt={pkg.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.75) 100%)' }} />
+                <div style={{ position: 'absolute', top: 6, left: 6, background: pkg.bookingUrl ? '#16A34A' : 'rgba(0,0,0,0.55)', borderRadius: 5, padding: '1px 5px' }}>
+                  <span style={{ fontSize: 8, fontWeight: 800, color: '#fff' }}>{pkg.bookingUrl ? '✓ RTDC' : pkg.badge}</span>
+                </div>
+                <div style={{ position: 'absolute', bottom: 6, left: 7, right: 7, zIndex: 2 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.7)', lineHeight: 1.2 }}>{pkg.name}</div>
+                  <div style={{ fontSize: 9.5, color: '#fff', fontWeight: 700, marginTop: 2, opacity: 0.9 }}>₹{pkg.price.toLocaleString()}</div>
+                </div>
+              </div>
+            ))}
+            <div
+              onClick={() => window.open('https://rtdc.tourism.rajasthan.gov.in/Client/PackageTour.aspx', '_blank')}
+              style={{ flexShrink: 0, width: 110, borderRadius: 12, border: '1.5px dashed var(--primary)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', gap: 4, padding: '8px', height: 110, background: 'var(--primary-ghost)' }}
+            >
+              <span style={{ fontSize: 22 }}>🏛</span>
+              <span style={{ fontSize: 9.5, fontWeight: 800, color: 'var(--primary-dark)', textAlign: 'center', lineHeight: 1.3 }}>More on RTDC Portal</span>
+              <span style={{ fontSize: 9, color: 'var(--primary)' }}>↗</span>
+            </div>
+          </div>
+
           {/* Upcoming trip */}
           <div className="sec-head"><h3>Upcoming Trip</h3><span className="more" onClick={() => navigate('/my-trips')}>View all →</span></div>
           <div className="booking-card" onClick={() => navigate('/my-trips')}>

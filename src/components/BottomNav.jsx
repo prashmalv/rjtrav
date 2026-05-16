@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
+import NearbySearch from './NearbySearch'
 
 export default function BottomNav({ dark }) {
   const navigate = useNavigate()
@@ -17,6 +18,8 @@ export default function BottomNav({ dark }) {
   ]
 
   return (
+    <>
+    <NearbySearch bottomOffset={68} />
     <div className={`bottomnav${dark ? ' dark' : ''}`}>
       {items.map((item) => {
         const active = location.pathname === item.path ||
@@ -30,5 +33,6 @@ export default function BottomNav({ dark }) {
         )
       })}
     </div>
+    </>
   )
 }
