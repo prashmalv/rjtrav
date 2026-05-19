@@ -40,6 +40,46 @@ const MONTHLY = [
   { month: 'Mar', val: 65 },
 ]
 
+const TOURIST_REGS = [
+  { nationality: 'India (Domestic)', count: 42180, pct: 73, color: '#C2185B' },
+  { nationality: 'United Kingdom', count: 3420, pct: 6, color: '#3B82F6' },
+  { nationality: 'Germany', count: 2890, pct: 5, color: '#F59E0B' },
+  { nationality: 'USA / Canada', count: 2450, pct: 4, color: '#8B5CF6' },
+  { nationality: 'France', count: 1980, pct: 3, color: '#10B981' },
+  { nationality: 'Japan / Korea', count: 1620, pct: 3, color: '#EF4444' },
+  { nationality: 'Others', count: 3340, pct: 6, color: '#64748B' },
+]
+
+const ENTRY_POINTS = [
+  { type: 'Jaipur Airport', count: 18420, ico: '✈️', color: '#3B82F6' },
+  { type: 'Jaipur Railway', count: 14200, ico: '🚂', color: '#C2185B' },
+  { type: 'Road (NH-48)', count: 12300, ico: '🚗', color: '#F59E0B' },
+  { type: 'Udaipur Airport', count: 8960, ico: '✈️', color: '#8B5CF6' },
+  { type: 'Jodhpur Airport', count: 4000, ico: '✈️', color: '#10B981' },
+]
+
+const maxEntryCount = Math.max(...ENTRY_POINTS.map(e => e.count))
+
+const SOS_ALERTS = [
+  { id: 'SOS-2026-001', tourist: 'Marco Weber', nationality: 'Germany', location: 'Sam Sand Dunes, Jaisalmer', time: '14 min ago', status: 'active', severity: 'high' },
+  { id: 'SOS-2026-002', tourist: 'Priya Sharma', nationality: 'India', location: 'Ranthambore Zone 3', time: '52 min ago', status: 'responding', severity: 'medium' },
+  { id: 'SOS-2026-003', tourist: 'Yuki Tanaka', nationality: 'Japan', location: 'Mehrangarh Fort, Jodhpur', time: '2h 14m ago', status: 'resolved', severity: 'low' },
+]
+
+const POLICE_POSTS = [
+  { location: 'Amber Fort', district: 'Jaipur', officers: 8, status: 'optimal', tourists: 2400 },
+  { location: 'Mehrangarh Fort', district: 'Jodhpur', officers: 6, status: 'optimal', tourists: 1850 },
+  { location: 'Jaisalmer Fort', district: 'Jaisalmer', officers: 5, status: 'optimal', tourists: 1200 },
+  { location: 'Sam Sand Dunes', district: 'Jaisalmer', officers: 4, status: 'low', tourists: 620 },
+]
+
+const CAPACITY_ALERTS = [
+  { site: 'Ranthambore NP', current: 90, weekend: 100, trend: 'At capacity', trendColor: '#EF4444' },
+  { site: 'Jaisalmer Fort', current: 78, weekend: 95, trend: 'Rising fast', trendColor: '#F59E0B' },
+  { site: 'Sam Sand Dunes', current: 55, weekend: 88, trend: 'Rising', trendColor: '#F59E0B' },
+  { site: 'Amber Fort', current: 65, weekend: 82, trend: 'Stable', trendColor: '#10B981' },
+]
+
 const maxMonthly = Math.max(...MONTHLY.map(m => m.val))
 const maxFootfall = Math.max(...FOOTFALL.map(f => f.visitors))
 
@@ -66,10 +106,10 @@ export default function OfficerDashboard() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, background: '#1E293B', borderBottom: '1px solid #334155', flexShrink: 0 }}>
-        {[['dashboard', '📊 Dashboard'], ['grievances', '📢 Grievances'], ['bsp', '🏨 BSP'], ['analytics', '📈 Analytics']].map(([val, lbl]) => (
-          <button key={val} onClick={() => setActiveTab(val)} style={{ flex: 1, padding: '10px 4px', fontSize: 11, fontWeight: 700, color: activeTab === val ? '#F59E0B' : '#64748B', background: 'none', borderBottom: activeTab === val ? '2px solid #F59E0B' : '2px solid transparent' }}>
+      {/* Tabs — scrollable row */}
+      <div style={{ display: 'flex', gap: 0, background: '#1E293B', borderBottom: '1px solid #334155', flexShrink: 0, overflowX: 'auto' }} className="hide-scrollbar">
+        {[['dashboard', '📊 Dashboard'], ['grievances', '📢 Grievances'], ['bsp', '🏨 BSP'], ['tourists', '👥 Tourists'], ['safety', '🛡 Safety'], ['analytics', '📈 Analytics']].map(([val, lbl]) => (
+          <button key={val} onClick={() => setActiveTab(val)} style={{ flexShrink: 0, padding: '10px 10px', fontSize: 10.5, fontWeight: 700, color: activeTab === val ? '#F59E0B' : '#64748B', background: 'none', borderBottom: activeTab === val ? '2px solid #F59E0B' : '2px solid transparent', whiteSpace: 'nowrap' }}>
             {lbl}
           </button>
         ))}
@@ -185,6 +225,157 @@ export default function OfficerDashboard() {
             </>
           )}
 
+          {activeTab === 'tourists' && (
+            <>
+              <div style={{ fontSize: 11, color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>Tourist Registrations · May 2026</div>
+
+              {/* Summary KPIs */}
+              <div className="grid-2">
+                {[
+                  { label: 'Registered Today', value: '1,842', delta: '↑ 8% vs yesterday', color: '#C2185B' },
+                  { label: 'This Week', value: '11,240', delta: '↑ 12% vs last week', color: '#3B82F6' },
+                  { label: 'This Month', value: '57,880', delta: '↑ 14% vs Apr', color: '#10B981' },
+                  { label: 'Foreign Tourists', value: '15,700', delta: '27% of total · ↑ 6%', color: '#F59E0B' },
+                ].map(m => (
+                  <div key={m.label} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 12, borderLeft: `3px solid ${m.color}` }}>
+                    <div style={{ fontSize: 9.5, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 700 }}>{m.label}</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: m.color, marginTop: 4, lineHeight: 1.1 }}>{m.value}</div>
+                    <div style={{ fontSize: 9.5, color: '#94A3B8', fontWeight: 700, marginTop: 2 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Nationality breakdown */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ fontSize: 12, fontWeight: 800 }}>Nationality Breakdown</span>
+                  <span style={{ fontSize: 10, color: '#64748B' }}>This Month</span>
+                </div>
+                {TOURIST_REGS.map(r => (
+                  <div key={r.nationality} style={{ marginBottom: 9 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 3 }}>
+                      <span style={{ color: '#E2E8F0', fontWeight: 600 }}>{r.nationality}</span>
+                      <span style={{ color: r.color, fontWeight: 700 }}>{r.count.toLocaleString()} · {r.pct}%</span>
+                    </div>
+                    <div style={{ height: 6, background: '#0F172A', borderRadius: 3, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', background: r.color, width: `${r.pct}%`, borderRadius: 3, transition: 'width 0.6s ease' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Entry points */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ fontSize: 12, fontWeight: 800 }}>Entry Points (Air · Rail · Road)</span>
+                  <span style={{ fontSize: 10, color: '#64748B' }}>This Month</span>
+                </div>
+                {ENTRY_POINTS.map(e => (
+                  <div key={e.type} style={{ marginBottom: 9 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 3 }}>
+                      <span style={{ color: '#E2E8F0' }}>{e.ico} {e.type}</span>
+                      <span style={{ color: e.color, fontWeight: 700 }}>{e.count.toLocaleString()}</span>
+                    </div>
+                    <div style={{ height: 6, background: '#0F172A', borderRadius: 3, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', background: `linear-gradient(90deg,${e.color},${e.color}88)`, width: `${(e.count / maxEntryCount) * 100}%`, borderRadius: 3 }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* AI insight */}
+              <div style={{ background: 'linear-gradient(135deg,#1E2D1A,#1A2A14)', border: '1px solid #2D4A20', borderRadius: 12, padding: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <span style={{ fontSize: 16 }}>🤖</span>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: '#86EFAC' }}>AI Registration Insights</span>
+                </div>
+                <div style={{ fontSize: 11, color: '#86EFAC', lineHeight: 1.7 }}>
+                  🇩🇪 <strong>German tourist registrations</strong> up 28% YoY — top interest: Jaisalmer Fort & Thar Desert. Prioritise German language BSP certification.<br />
+                  ✈️ <strong>Jaipur Airport</strong> handles 32% of all tourist arrivals — crowding expected during Nov–Dec peak. Pre-position welcome desks.
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === 'safety' && (
+            <>
+              <div style={{ fontSize: 11, color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>Law Enforcement &amp; Safety · Live</div>
+
+              {/* SOS KPIs */}
+              <div className="grid-2">
+                {[
+                  { label: 'Active SOS Alerts', value: '1', delta: '1 team responding', color: '#EF4444' },
+                  { label: 'Resolved Today', value: '3', delta: 'Avg response: 8 min', color: '#10B981' },
+                  { label: 'Blue Beret Posts', value: '28', delta: '14 heritage sites covered', color: '#3B82F6' },
+                  { label: 'Helpline 1363', value: '47', delta: 'calls today · 4.8/5 rating', color: '#F59E0B' },
+                ].map(m => (
+                  <div key={m.label} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 12, borderLeft: `3px solid ${m.color}` }}>
+                    <div style={{ fontSize: 9.5, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 700 }}>{m.label}</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: m.color, marginTop: 4, lineHeight: 1.1 }}>{m.value}</div>
+                    <div style={{ fontSize: 9.5, color: '#94A3B8', fontWeight: 700, marginTop: 2 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Active SOS alerts */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 10 }}>🆘 SOS Incidents · Last 24h</div>
+                {SOS_ALERTS.map(s => (
+                  <div key={s.id} style={{ marginBottom: 10, padding: '10px 12px', borderRadius: 10, background: s.status === 'active' ? '#7F1D1D' : s.status === 'responding' ? '#1C3A5E' : '#1E293B', border: `1px solid ${s.status === 'active' ? '#991B1B' : s.status === 'responding' ? '#2D4A7E' : '#334155'}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#E2E8F0' }}>{s.tourist} <span style={{ fontSize: 10, color: '#94A3B8', fontWeight: 500 }}>· {s.nationality}</span></div>
+                        <div style={{ fontSize: 10.5, color: '#94A3B8', marginTop: 2 }}>📍 {s.location}</div>
+                        <div style={{ fontSize: 10, color: '#64748B', marginTop: 2 }}>{s.id} · {s.time}</div>
+                      </div>
+                      <span style={{
+                        background: s.status === 'active' ? '#EF4444' : s.status === 'responding' ? '#3B82F6' : '#10B981',
+                        color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 6, flexShrink: 0,
+                      }}>
+                        {s.status === 'active' ? '🔴 ACTIVE' : s.status === 'responding' ? '🔵 RESPONDING' : '✓ RESOLVED'}
+                      </span>
+                    </div>
+                    {s.status === 'active' && (
+                      <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+                        <button style={{ background: '#1E40AF', color: '#BFDBFE', padding: '5px 10px', borderRadius: 7, fontSize: 10.5, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Dispatch Unit</button>
+                        <button style={{ background: '#065F46', color: '#A7F3D0', padding: '5px 10px', borderRadius: 7, fontSize: 10.5, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Call Tourist</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Police post deployment */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 10 }}>👮 Blue Beret Deployment Status</div>
+                {POLICE_POSTS.map(p => (
+                  <div key={p.location} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, padding: '8px 0', borderBottom: '1px solid #0F172A' }}>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#E2E8F0' }}>{p.location}</div>
+                      <div style={{ fontSize: 10, color: '#64748B', marginTop: 1 }}>📍 {p.district} · {p.tourists.toLocaleString()} tourists today</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: p.status === 'optimal' ? '#10B981' : '#F59E0B' }}>{p.officers} officers</div>
+                      <div style={{ fontSize: 9, color: p.status === 'optimal' ? '#10B981' : '#F59E0B', fontWeight: 700 }}>{p.status === 'optimal' ? '✓ Optimal' : '⚠ Needs reinforcement'}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* AI safety insight */}
+              <div style={{ background: 'linear-gradient(135deg,#1E2D1A,#1A2A14)', border: '1px solid #2D4A20', borderRadius: 12, padding: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <span style={{ fontSize: 16 }}>🤖</span>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: '#86EFAC' }}>AI Safety Insights</span>
+                </div>
+                <div style={{ fontSize: 11, color: '#86EFAC', lineHeight: 1.7 }}>
+                  🏜 <strong>Sam Sand Dunes</strong> has only 4 officers for 620 tourists — ratio below threshold. Request 2 additional personnel before weekend.<br />
+                  📞 <strong>Tourist Helpline 1363</strong> peak load: 6–8 PM (sunset at dunes). Consider shift extension for evening coverage.
+                </div>
+              </div>
+            </>
+          )}
+
           {activeTab === 'analytics' && (
             <>
               <div style={{ fontSize: 11, color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>Tourist Analytics · May 2026</div>
@@ -243,6 +434,35 @@ export default function OfficerDashboard() {
                 </div>
               </div>
 
+              {/* Capacity forecasting */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ fontSize: 12, fontWeight: 800 }}>📊 Capacity Forecast · This Weekend</span>
+                  <span style={{ fontSize: 10, color: '#64748B' }}>AI Predicted</span>
+                </div>
+                {CAPACITY_ALERTS.map(c => {
+                  const weekendColor = c.weekend >= 90 ? '#EF4444' : c.weekend >= 75 ? '#F59E0B' : '#10B981'
+                  return (
+                    <div key={c.site} style={{ marginBottom: 12, padding: '10px 12px', borderRadius: 10, background: '#0F172A', border: `1px solid ${weekendColor}33` }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#E2E8F0' }}>{c.site}</span>
+                        <span style={{ background: weekendColor + '22', color: weekendColor, fontSize: 9.5, fontWeight: 800, padding: '2px 8px', borderRadius: 6 }}>
+                          {c.weekend >= 90 ? '⚠ Near Capacity' : c.weekend >= 75 ? '↑ High Demand' : '✓ Normal'}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 12, fontSize: 10.5, marginBottom: 6 }}>
+                        <span style={{ color: '#94A3B8' }}>Now: <strong style={{ color: '#E2E8F0' }}>{c.current}%</strong></span>
+                        <span style={{ color: '#94A3B8' }}>Weekend forecast: <strong style={{ color: weekendColor }}>{c.weekend}%</strong></span>
+                        <span style={{ color: c.trendColor, fontWeight: 700 }}>{c.trend}</span>
+                      </div>
+                      <div style={{ height: 5, background: '#1E293B', borderRadius: 3, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', background: `linear-gradient(90deg,${weekendColor}88,${weekendColor})`, width: `${c.weekend}%`, borderRadius: 3, transition: 'width 0.8s ease' }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
               {/* AI insights for analytics */}
               <div style={{ background: 'linear-gradient(135deg,#1E2D1A,#1A2A14)', border: '1px solid #2D4A20', borderRadius: 12, padding: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -250,6 +470,7 @@ export default function OfficerDashboard() {
                   <span style={{ fontSize: 12, fontWeight: 800, color: '#86EFAC' }}>AI Analytics Insights</span>
                 </div>
                 <div style={{ fontSize: 11, color: '#86EFAC', lineHeight: 1.7 }}>
+                  🚨 <strong>Ranthambore NP</strong> predicted at 100% capacity this weekend — consider diverting bookings to Sariska or Keoladeo.<br />
                   📈 <strong>Jaisalmer</strong> shows +22% growth — highest in the state. Expand infrastructure before next season.<br />
                   🎪 <strong>Pushkar Camel Fair</strong> (Nov) generated ₹18.2 Cr in 10 days — consider dedicated pre-booking portal.<br />
                   🌍 <strong>Foreign tourist share</strong> at 34% (+6% YoY) — strengthen multilingual BSP certification.
@@ -263,11 +484,11 @@ export default function OfficerDashboard() {
       </div>
 
       {/* Dark bottom nav */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', background: '#1E293B', borderTop: '1px solid #334155', padding: '8px 4px 12px', flexShrink: 0 }}>
-        {[['📊', 'Dashboard', 'dashboard'], ['📢', 'Grievances', 'grievances'], ['🏨', 'BSP', 'bsp'], ['📈', 'Analytics', 'analytics']].map(([ico, lbl, val]) => (
-          <button key={val} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 10, color: activeTab === val ? '#F59E0B' : '#64748B', fontWeight: 600, flex: 1, background: 'none', border: 'none', cursor: 'pointer' }}
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', background: '#1E293B', borderTop: '1px solid #334155', padding: '8px 2px 12px', flexShrink: 0 }}>
+        {[['📊', 'Data', 'dashboard'], ['📢', 'Cases', 'grievances'], ['🏨', 'BSP', 'bsp'], ['👥', 'Tourists', 'tourists'], ['🛡', 'Safety', 'safety'], ['📈', 'Stats', 'analytics']].map(([ico, lbl, val]) => (
+          <button key={val} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 9, color: activeTab === val ? '#F59E0B' : '#64748B', fontWeight: 600, flex: 1, background: 'none', border: 'none', cursor: 'pointer' }}
             onClick={() => setActiveTab(val)}>
-            <span style={{ fontSize: 20 }}>{ico}</span>
+            <span style={{ fontSize: 18 }}>{ico}</span>
             {lbl}
           </button>
         ))}
