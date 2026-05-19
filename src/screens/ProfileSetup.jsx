@@ -4,17 +4,24 @@ import { useApp } from '../context/AppContext'
 import StatusBar from '../components/StatusBar'
 
 const INTERESTS = [
-  { ico: '🏰', label: 'Heritage & Forts' },
-  { ico: '🐅', label: 'Wildlife & Safari' },
-  { ico: '🐪', label: 'Desert Adventure' },
+  { ico: '/images/fort.png', label: 'Forts & Palaces' },
+  { ico: '🐅', label: 'Wildlife' },
+  { ico: '🏜', label: 'Desert & Dunes' },
   { ico: '🍽', label: 'Food & Cuisine' },
-  { ico: '🎭', label: 'Culture & Art' },
-  { ico: '🧘', label: 'Spiritual & Temples' },
   { ico: '📸', label: 'Photography' },
-  { ico: '🛍', label: 'Shopping & Bazaars' },
+  { ico: '🛍', label: 'Shopping' },
   { ico: '⛵', label: 'Lakes & Nature' },
-  { ico: '🎪', label: 'Festivals & Events' },
+  { ico: '🧘', label: 'Wellness & Culture' },
+  { ico: '🛕', label: 'Religious Places' },
+  { ico: '🏛', label: 'UNESCO Heritage' },
 ]
+
+function ChipIcon({ ico, size = 22 }) {
+  if (typeof ico === 'string' && (ico.startsWith('/') || ico.startsWith('http'))) {
+    return <img src={ico} alt="" style={{ width: size, height: size, objectFit: 'contain' }} />
+  }
+  return <span style={{ fontSize: size }}>{ico}</span>
+}
 
 const TRAVEL_STYLES = [
   { ico: '🧍', label: 'Solo', desc: 'Travelling alone' },
@@ -147,7 +154,7 @@ export default function ProfileSetup() {
                     border: `${form.interests.includes(item.label) ? 2 : 1}px solid ${form.interests.includes(item.label) ? 'var(--primary)' : 'var(--border)'}`,
                     borderRadius: 12, padding: '12px 10px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                   }}>
-                    <span style={{ fontSize: 22 }}>{item.ico}</span>
+                    <ChipIcon ico={item.ico} size={22} />
                     <span style={{ fontSize: 12, fontWeight: 700, color: form.interests.includes(item.label) ? 'var(--primary-dark)' : 'var(--ink)' }}>{item.label}</span>
                     {form.interests.includes(item.label) && <span style={{ marginLeft: 'auto', color: 'var(--primary)', fontWeight: 800, fontSize: 14 }}>✓</span>}
                   </div>

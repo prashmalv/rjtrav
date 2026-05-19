@@ -27,6 +27,7 @@ import ProfileSetup from './screens/ProfileSetup'
 import ItineraryBuilder from './screens/ItineraryBuilder'
 import EmergencySOS from './screens/EmergencySOS'
 import VisualAI from './screens/VisualAI'
+import CityAttractions from './screens/CityAttractions'
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useApp()
@@ -63,6 +64,7 @@ export default function App() {
       <Route path="/itinerary-builder" element={<ProtectedRoute><ItineraryBuilder /></ProtectedRoute>} />
       <Route path="/sos" element={<ProtectedRoute><EmergencySOS /></ProtectedRoute>} />
       <Route path="/visual-ai" element={<ProtectedRoute><VisualAI /></ProtectedRoute>} />
+      <Route path="/attractions" element={<CityAttractions />} />
 
       {/* Officer portal */}
       <Route path="/officer-login" element={<OfficerLogin />} />

@@ -7,7 +7,7 @@ import LanguageSelector from '../components/LanguageSelector'
 import NearbySearch from '../components/NearbySearch'
 
 const INTEREST_OPTIONS = [
-  { ico: '🏰', label: 'Forts & Palaces' },
+  { ico: '/images/fort.png', label: 'Forts & Palaces' },
   { ico: '🐅', label: 'Wildlife' },
   { ico: '🏜', label: 'Desert & Dunes' },
   { ico: '🍽', label: 'Food & Cuisine' },
@@ -19,6 +19,13 @@ const INTEREST_OPTIONS = [
   { ico: '🏛', label: 'UNESCO Heritage' },
 ]
 
+function ChipIcon({ ico }) {
+  if (typeof ico === 'string' && (ico.startsWith('/') || ico.startsWith('http'))) {
+    return <img src={ico} alt="" style={{ width: 16, height: 16, objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle' }} />
+  }
+  return <span>{ico}</span>
+}
+
 const FROM_CITIES = ['Delhi / NCR', 'Mumbai', 'Bengaluru', 'International']
 
 const DAYS_OPTIONS = ['1–2 Days', '3–4 Days', '5–7 Days', '7+ Days']
@@ -28,21 +35,6 @@ const STYLE_OPTIONS = [
   { label: 'Couple', ico: '👫' },
   { label: 'Family', ico: '👨‍👩‍👧' },
   { label: 'Group', ico: '👥' },
-]
-
-const GEO_SITES = [
-  { name: 'Amber Fort', city: 'Jaipur', emoji: '🏰' },
-  { name: 'Hawa Mahal', city: 'Jaipur', emoji: '🏯' },
-  { name: 'Jantar Mantar', city: 'Jaipur', emoji: '🔭' },
-  { name: 'City Palace', city: 'Udaipur', emoji: '🏛' },
-  { name: 'Lake Pichola', city: 'Udaipur', emoji: '⛵' },
-  { name: 'Mehrangarh Fort', city: 'Jodhpur', emoji: '🏰' },
-  { name: 'Jaisalmer Fort', city: 'Jaisalmer', emoji: '🏜' },
-  { name: 'Sam Sand Dunes', city: 'Jaisalmer', emoji: '🐪' },
-  { name: 'Ranthambore Fort', city: 'Sawai Madhopur', emoji: '🐅' },
-  { name: 'Brahma Temple', city: 'Pushkar', emoji: '🛕' },
-  { name: 'Dilwara Temples', city: 'Mount Abu', emoji: '🛕' },
-  { name: 'Keoladeo Bird Sanctuary', city: 'Bharatpur', emoji: '🦅' },
 ]
 
 async function callAI(messages, userProfile, language) {
@@ -231,7 +223,7 @@ function ChipSelect({ options, selected, onToggle, multi = false }) {
               gap: 4,
             }}
           >
-            {ico && <span>{ico}</span>}
+            {ico && <ChipIcon ico={ico} />}
             {val}
           </button>
         )
@@ -250,8 +242,6 @@ export default function PadharoAI() {
   const [typing, setTyping] = useState(false)
   const [form, setForm] = useState({ name: '', style: '', interests: [], fromCity: '', days: '' })
   const [isListening, setIsListening] = useState(false)
-  const [geoSite, setGeoSite] = useState(null)
-  const [showGeoSheet, setShowGeoSheet] = useState(false)
   const guestProfileRef = useRef(null)
   const appLanguageRef = useRef(appLanguage)
   const initialMsgFired = useRef(false)
@@ -390,19 +380,6 @@ export default function PadharoAI() {
     }))
   }
 
-  const handleGeoSelect = (site) => {
-    setGeoSite(site)
-    setShowGeoSheet(false)
-    const profile = guestProfileRef.current || user
-    const profileCtx = profile ? [
-      profile.travelStyle && `I'm a ${profile.travelStyle} traveller.`,
-      profile.interests?.length && `My interests are: ${profile.interests.join(', ')}.`,
-      profile.homeCity && `I've travelled here from ${profile.homeCity}.`,
-    ].filter(Boolean).join(' ') : ''
-    const prompt = `I'm currently standing at ${site.name} in ${site.city}, Rajasthan. ${profileCtx} Act as my personal audio guide — tell me the fascinating history, legends, must-see highlights, and practical visitor tips for right now.`
-    doSendMsg(prompt, msgs, undefined)
-  }
-
   // ── ONBOARDING FORM view ──────────────────────────────────────────────────
   if (view === 'home') {
     const hasAnyInput = form.name || form.style || form.interests.length || form.fromCity || form.days
@@ -516,7 +493,14 @@ export default function PadharoAI() {
                   {form.style && <span className="chip chip-primary" style={{ fontSize: 10 }}>{STYLE_OPTIONS.find(s=>s.label===form.style)?.ico} {form.style}</span>}
                   {form.fromCity && <span className="chip chip-primary" style={{ fontSize: 10 }}>✈️ {form.fromCity}</span>}
                   {form.days && <span className="chip chip-primary" style={{ fontSize: 10 }}>📅 {form.days}</span>}
-                  {form.interests.map(i => <span key={i} className="chip chip-neutral" style={{ fontSize: 10 }}>{INTEREST_OPTIONS.find(o=>o.label===i)?.ico} {i}</span>)}
+                  {form.interests.map(i => {
+                    const opt = INTEREST_OPTIONS.find(o => o.label === i)
+                    return (
+                      <span key={i} className="chip chip-neutral" style={{ fontSize: 10, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        {opt?.ico && <ChipIcon ico={opt.ico} />} {i}
+                      </span>
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -590,22 +574,6 @@ export default function PadharoAI() {
         </div>
       )}
 
-      {/* Geo storytelling banner — manual site picker, no GPS required */}
-      <div
-        onClick={() => setShowGeoSheet(true)}
-        style={{ background: 'linear-gradient(90deg,#0D1B2E,#1E3A5F)', borderBottom: '1px solid #2D4A6E', padding: '7px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', flexShrink: 0 }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ fontSize: 13 }}>📍</span>
-          <span style={{ fontSize: 10.5, color: geoSite ? '#93C5FD' : '#64748B', fontWeight: 700 }}>
-            {geoSite ? `${geoSite.emoji} ${geoSite.name}, ${geoSite.city}` : 'Select your current heritage site for audio guide'}
-          </span>
-        </div>
-        <span style={{ fontSize: 10, color: '#3B82F6', fontWeight: 700, flexShrink: 0 }}>
-          {geoSite ? 'Change →' : 'Tap →'}
-        </span>
-      </div>
-
       <div className="screen-scroll" style={{ background: 'linear-gradient(180deg,var(--soft) 0%,var(--bg) 100%)', padding: '12px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ textAlign: 'center', fontSize: 10, color: 'var(--ink-mute)', fontWeight: 600 }}>Today · Responding in {appLanguage}</div>
 
@@ -676,47 +644,6 @@ export default function PadharoAI() {
         >→</button>
       </div>
 
-      {/* Geo site selection sheet — manual picker, no GPS required */}
-      {showGeoSheet && (
-        <div
-          style={{ position: 'fixed', top: 0, bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 420, background: 'rgba(0,0,0,0.65)', zIndex: 300, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
-          onClick={() => setShowGeoSheet(false)}
-        >
-          <div
-            style={{ background: '#0F172A', border: '1px solid #334155', borderRadius: '18px 18px 0 0', padding: '16px 16px 28px', maxHeight: '68vh', overflowY: 'auto' }}
-            onClick={e => e.stopPropagation()}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: '#E2E8F0' }}>📍 Where are you right now?</div>
-              <button onClick={() => setShowGeoSheet(false)} style={{ background: '#334155', border: 'none', borderRadius: 6, padding: '4px 9px', color: '#94A3B8', fontSize: 11, cursor: 'pointer' }}>✕</button>
-            </div>
-            <div style={{ fontSize: 10.5, color: '#64748B', marginBottom: 14, lineHeight: 1.5 }}>
-              Select your current site — Rajwada AI will narrate its history, legends &amp; tips for you. No GPS needed.
-              {(guestProfileRef.current?.homeCity || user?.homeCity) && (
-                <span style={{ color: '#93C5FD' }}> Your profile ({guestProfileRef.current?.homeCity || user?.homeCity}) will be included in the context.</span>
-              )}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {GEO_SITES.map(site => (
-                <button
-                  key={site.name}
-                  onClick={() => handleGeoSelect(site)}
-                  style={{
-                    padding: '8px 12px', borderRadius: 20, fontSize: 11.5, fontWeight: 700, cursor: 'pointer',
-                    border: geoSite?.name === site.name ? '1.5px solid #3B82F6' : '1.5px solid #334155',
-                    background: geoSite?.name === site.name ? '#1E3A5F' : '#1E293B',
-                    color: geoSite?.name === site.name ? '#93C5FD' : '#94A3B8',
-                    display: 'flex', alignItems: 'center', gap: 5,
-                  }}
-                >
-                  <span>{site.emoji}</span>
-                  <span>{site.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

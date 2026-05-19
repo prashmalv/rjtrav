@@ -64,13 +64,13 @@ export default function TouristHome() {
           <div className="cat-grid">
             {[
               ['🗺', 'Explore', '/explore'],
-              ['🎫', 'My Trips', '/my-trips'],
+              ['🎟', 'Things to Do', '/attractions'],
               ['🤖', 'AI Chat', '/ai-chat'],
               ['🗓', 'Itinerary', '/itinerary-builder'],
+              ['🎫', 'My Trips', '/my-trips'],
               ['📢', 'Grievance', '/grievances'],
               ['🏨', 'BSP List', '/bsp'],
               ['🆘', 'SOS', '/sos'],
-              ['👤', 'Profile', '/profile'],
             ].map(([ico, nm, path]) => (
               <div key={nm} className="cat-tile" onClick={() => path ? navigate(path) : showToast('Coming soon')}>
                 <div className="cat-ico">{ico}</div>
