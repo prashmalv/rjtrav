@@ -317,8 +317,12 @@ export default function PadharoAI() {
       setMsgs(prev => [...prev, { from: 'bot', text: reply }])
     } catch (err) {
       setTyping(false)
-      if (err.message === 'AI_NOT_CONFIGURED') {
-        setMsgs(prev => [...prev, { from: 'bot', text: localFallback(msg, profile) }])
+      const code = err.message
+      if (code === 'AI_NOT_CONFIGURED' || code === 'AI_OVERLOADED' || code === 'AI_UNAVAILABLE') {
+        const notice = code === 'AI_OVERLOADED'
+          ? "⚡ Rajwada AI is busy right now — sharing a quick answer from my offline knowledge while the live AI recovers.\n\n"
+          : ''
+        setMsgs(prev => [...prev, { from: 'bot', text: notice + localFallback(msg, profile) }])
       } else {
         setMsgs(prev => [...prev, { from: 'bot', text: "I'm having trouble connecting right now. Please try again in a moment. 🔄" }])
       }

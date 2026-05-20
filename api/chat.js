@@ -273,31 +273,52 @@ ${langInstruction}`
 
   if (!anthropicMessages.length) return res.status(400).json({ error: 'No user message' })
 
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 800,
-        system,
-        messages: anthropicMessages,
-      }),
-    })
+  const callAnthropic = (model) => fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({ model, max_tokens: 800, system, messages: anthropicMessages }),
+  })
 
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}))
-      throw new Error(err.error?.message || `HTTP ${response.status}`)
+  const isRetryable = (status, msg) =>
+    status === 529 || status === 503 || status === 429 || /overload/i.test(msg || '')
+
+  const MODELS = ['claude-haiku-4-5-20251001', 'claude-sonnet-4-6']
+
+  let response, lastErrMsg = '', lastStatus = 0
+  outer: for (const model of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        response = await callAnthropic(model)
+        if (response.ok) break outer
+        const err = await response.json().catch(() => ({}))
+        lastErrMsg = err.error?.message || `HTTP ${response.status}`
+        lastStatus = response.status
+        if (!isRetryable(response.status, lastErrMsg)) break // hard fail — don't try next model
+      } catch (e) {
+        lastErrMsg = e.message
+      }
+      if (attempt === 0) await new Promise(r => setTimeout(r, 500 + Math.random() * 400))
     }
+  }
 
+  if (!response || !response.ok) {
+    const overloaded = isRetryable(lastStatus, lastErrMsg)
+    console.error('Rajwada AI error:', lastErrMsg, 'status:', lastStatus)
+    return res.status(overloaded ? 503 : 500).json({
+      error: overloaded ? 'AI_OVERLOADED' : 'AI_UNAVAILABLE',
+      message: lastErrMsg,
+    })
+  }
+
+  try {
     const data = await response.json()
     return res.json({ reply: data.content[0].text })
   } catch (err) {
-    console.error('Rajwada AI error:', err.message)
+    console.error('Rajwada AI parse error:', err.message)
     return res.status(500).json({ error: 'AI_UNAVAILABLE', message: err.message })
   }
 }
