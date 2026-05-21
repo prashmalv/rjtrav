@@ -22,6 +22,8 @@ const TRANSPORT_SUB = [
   { ico: '🚂', label: 'Railway',       query: 'railway station' },
   { ico: '✈️', label: 'Airport',       query: 'airport' },
   { ico: '🚇', label: 'Metro',         query: 'metro station' },
+  { ico: '⛽', label: 'Petrol Pump',   query: 'petrol pump fuel station' },
+  { ico: '🔌', label: 'EV Charging',   query: 'ev charging station' },
 ]
 
 export default function NearbySearch({ bottomOffset = 70 }) {
