@@ -3,12 +3,19 @@
   "version": "1.0.0",
   "description": "Rajasthan Tourism Mobile Application - Government of Rajasthan",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js",
+    "start:prod": "NODE_ENV=production node server.js"
   },
   "dependencies": {
+    "express": "^4.22.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2"
