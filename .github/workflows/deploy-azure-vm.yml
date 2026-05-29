@@ -1,0 +1,63 @@
+name: Deploy to Azure VM
+
+# Triggers on every push to main, or manually via Actions tab.
+# Runs an SSH script on the Azure VM that pulls latest code, builds, and
+# zero-downtime reloads PM2.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-azure-vm
+  cancel-in-progress: false      # don't kill an in-progress prod deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: SSH and deploy
+        env:
+          SSH_KEY:  ${{ secrets.AZURE_VM_SSH_KEY }}
+          SSH_HOST: ${{ secrets.AZURE_VM_HOST }}
+          SSH_USER: ${{ secrets.AZURE_VM_USER }}
+        run: |
+          set -euo pipefail
+
+          # Write SSH key (mode 600)
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Trust the host on first connect
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" bash -s <<'REMOTE'
+          set -e
+          cd /home/egovai/rjtrav
+
+          echo "→ git pull"
+          git fetch --depth 1 origin main
+          git reset --hard origin/main
+
+          echo "→ npm install (production deps)"
+          npm install --silent
+
+          echo "→ build"
+          npm run build
+
+          echo "→ reload PM2 (zero downtime)"
+          # Make sure env vars from /etc/environment are picked up
+          source /etc/environment
+          export ANTHROPIC_API_KEY
+          pm2 reload rjtourism --update-env
+
+          echo "→ health check"
+          sleep 2
+          curl -fsS http://localhost:3000/api/health
+          echo
+          echo "✓ Deploy complete"
+          REMOTE
