@@ -65,7 +65,19 @@ export default async function handler(req, res) {
 
   const { messages = [], userProfile = {}, language = 'English' } = req.body || {}
   const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) return res.status(503).json({ error: 'AI_NOT_CONFIGURED' })
+
+  // Hostname-based routing → Azure aliases vs default (Anthropic direct).
+  // Aliases are obscure jewel names; mapping is server-side only.
+  const host = (req.headers['x-forwarded-host'] || req.headers.host || '').toLowerCase()
+  const AZURE_DEPLOYMENTS = { manik: 'manik', panna: 'panna' } // pukhraj → fall through to Anthropic
+  let alias = null
+  for (const k of Object.keys(AZURE_DEPLOYMENTS)) {
+    if (host.startsWith(k + '.') || host.startsWith(k + '-')) { alias = k; break }
+  }
+  if (host.startsWith('pukhraj.') || host.startsWith('pukhraj-')) alias = 'pukhraj'
+  const useAzure = alias && AZURE_DEPLOYMENTS[alias] && process.env.AZURE_AI_ENDPOINT && process.env.AZURE_AI_KEY
+
+  if (!apiKey && !useAzure) return res.status(503).json({ error: 'AI_NOT_CONFIGURED' })
 
   // Kick off weather fetch in parallel — we'll await it before building system prompt
   const weatherPromise = getLiveWeather()
@@ -273,6 +285,42 @@ ${langInstruction}`
 
   if (!anthropicMessages.length) return res.status(400).json({ error: 'No user message' })
 
+  // ── Azure AI path (manik=GPT, panna=Mistral via Azure AI Services) ──────
+  if (useAzure) {
+    const azureEndpoint = process.env.AZURE_AI_ENDPOINT.replace(/\/+$/, '')
+    const azureKey = process.env.AZURE_AI_KEY
+    const azureApiVer = process.env.AZURE_AI_API_VERSION || '2024-10-21'
+    const deployment = AZURE_DEPLOYMENTS[alias]
+    const url = `${azureEndpoint}/openai/deployments/${deployment}/chat/completions?api-version=${azureApiVer}`
+    const azureMessages = [{ role: 'system', content: system }, ...anthropicMessages]
+
+    let azResp, azErrMsg = ''
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        azResp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'api-key': azureKey },
+          body: JSON.stringify({ messages: azureMessages, max_tokens: 800, temperature: 0.7 }),
+        })
+        if (azResp.ok) break
+        const err = await azResp.json().catch(() => ({}))
+        azErrMsg = err.error?.message || err.message || `HTTP ${azResp.status}`
+      } catch (e) {
+        azErrMsg = e.message
+      }
+      if (attempt === 0) await new Promise(r => setTimeout(r, 600))
+    }
+
+    if (!azResp || !azResp.ok) {
+      console.error(`Azure (${alias}) error:`, azErrMsg)
+      return res.status(503).json({ error: 'AI_UNAVAILABLE', message: azErrMsg, alias })
+    }
+    const azData = await azResp.json()
+    const reply = azData.choices?.[0]?.message?.content || ''
+    return res.json({ reply, alias })
+  }
+
+  // ── Default path: direct Anthropic API (used for pukhraj or unmatched) ───
   const callAnthropic = (model) => fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -316,7 +364,7 @@ ${langInstruction}`
 
   try {
     const data = await response.json()
-    return res.json({ reply: data.content[0].text })
+    return res.json({ reply: data.content[0].text, alias: alias || 'pukhraj' })
   } catch (err) {
     console.error('Rajwada AI parse error:', err.message)
     return res.status(500).json({ error: 'AI_UNAVAILABLE', message: err.message })
